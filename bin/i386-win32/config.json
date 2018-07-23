@@ -35,7 +35,7 @@
     {
       "method": "DELETE",
       "route": "/user/:id",
-      "dataset":"user.json"
+      "dataset":"delete-user.json"
     }
   ]
 }
