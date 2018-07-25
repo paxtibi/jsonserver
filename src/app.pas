@@ -190,8 +190,15 @@ begin
       if (r.Method <> '') and (r.Route <> '') then
       begin
         Writeln(r.Method, ' ', r.Route);
-        handle := TRouter.Create(Application);
+        if r.payload <> '' then
+        begin
+          handle := TPayloadRouter.Create(Application);
+          TPayloadRouter(handle).compare := r.compare;
+        end
+        else
+          handle := TRouter.Create(Application);
         handle.DataSetName := r.dataset;
+        handle.Payload := r.payload;
         HTTPRouter.RegisterRoute(r.Route, getRouteMethod(r.Method), handle);
       end;
     end;

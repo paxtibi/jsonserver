@@ -10,32 +10,39 @@
     {
       "method": "GET",
       "route": "/user/list",
-      "dataset":"user.json"
+      "dataset": "user.json"
     },
     {
       "method": "GET",
       "route": "/user/:id/info",
-      "dataset":"user.json"
+      "dataset": "user.json"
     },
     {
       "method": "GET",
       "route": "/user/:id/last-login",
-      "dataset":"user.json"
+      "dataset": "user.json"
     },
     {
       "method": "PUT",
       "route": "/user/create",
-      "dataset":"user.json"
+      "dataset": "put-user.json"
     },
     {
       "method": "POST",
       "route": "/user/:id/update",
-      "dataset":"user.json"
+      "dataset": "post-user.json"
+    },
+    {
+      "method": "POST",
+      "route": "/user/post-list",
+      "payload": "input.ids",
+      "compare": "id",
+      "dataset": "user.json"
     },
     {
       "method": "DELETE",
       "route": "/user/:id",
-      "dataset":"delete-user.json"
+      "dataset": "delete-user.json"
     }
   ]
 }

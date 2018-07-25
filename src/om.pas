@@ -14,29 +14,22 @@ type
 
   TRouterObject = class(TCollectionItem)
   private
+    Fcompare: string;
     Fdataset: string;
     FMethod: string;
+    FPayload: string;
     FRoute: string;
+    procedure Setcompare(AValue: string);
     procedure Setdataset(AValue: string);
     procedure SetMethod(AValue: string);
+    procedure SetPayload(AValue: string);
     procedure SetRoute(AValue: string);
   published
     property method: string read FMethod write SetMethod;
     property route: string read FRoute write SetRoute;
-    property dataset: string read Fdataset write Setdataset;
-  end;
-
-  { TDataDescriptorObject }
-
-  TDataDescriptorObject = class(TCollectionItem)
-  private
-    Fkey: string;
-    Fname: string;
-    procedure Setkey(AValue: string);
-    procedure Setname(AValue: string);
-  published
-    property name: string read Fname write Setname;
-    property key: string read Fkey write Setkey;
+    property dataset: string read FDataset write SetDataset;
+    property payload: string read FPayload write SetPayload;
+    property compare: string read Fcompare write Setcompare;
   end;
 
   { TApplicationConfigObject }
@@ -71,21 +64,6 @@ type
 
 implementation
 
-{ TDataDescriptorObject }
-
-procedure TDataDescriptorObject.Setkey(AValue: string);
-begin
-  if Fkey = AValue then
-    Exit;
-  Fkey := AValue;
-end;
-
-procedure TDataDescriptorObject.Setname(AValue: string);
-begin
-  if Fname = AValue then
-    Exit;
-  Fname := AValue;
-end;
 
 { TApplicationConfigObject }
 
@@ -110,11 +88,25 @@ begin
   FMethod := AValue;
 end;
 
+procedure TRouterObject.SetPayload(AValue: string);
+begin
+  if Fpayload = AValue then
+    Exit;
+  Fpayload := AValue;
+end;
+
 procedure TRouterObject.Setdataset(AValue: string);
 begin
   if Fdataset = AValue then
     Exit;
   Fdataset := AValue;
+end;
+
+procedure TRouterObject.Setcompare(AValue: string);
+begin
+  if Fcompare = AValue then
+    Exit;
+  Fcompare := AValue;
 end;
 
 procedure TRouterObject.SetRoute(AValue: string);
@@ -142,16 +134,14 @@ end;
 
 constructor TConfigObject.Create;
 begin
-  Fconfig := TApplicationConfigObject.Create;
+  FConfig := TApplicationConfigObject.Create;
   FRouters := TCollection.Create(TRouterObject);
-  FData := TCollection.Create(TDataDescriptorObject);
 end;
 
 destructor TConfigObject.Destroy;
 begin
   FreeAndNil(Fconfig);
   FreeAndNil(FRouters);
-  FreeAndNil(FData);
   inherited Destroy;
 end;
 
