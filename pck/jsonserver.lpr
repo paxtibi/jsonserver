@@ -8,10 +8,7 @@ uses {$IFDEF UNIX} {$IFDEF UseCThreads}
   SysUtils,
   app, om, routers { you can add units after this };
 
-{$R *.res}
-
 begin
-  Application.Title := 'FakeJSonServer';
   Application.Initialize;
   Application.StopOnException := False;
   WriteLn('Accept request on port :', Application.Port);

@@ -12,7 +12,6 @@
       <MainUnit Value="0"/>
       <Title Value="jsonserver"/>
       <ResourceType Value="res"/>
-      <UseXPManifest Value="True"/>
       <XPManifest>
         <TextDesc Value="Json Server"/>
       </XPManifest>
@@ -55,7 +54,7 @@
     </Target>
     <SearchPaths>
       <IncludeFiles Value="$(ProjOutDir)"/>
-      <OtherUnitFiles Value="..\src"/>
+      <OtherUnitFiles Value="..\src;..\src\os\$(TargetOS)"/>
       <UnitOutputDirectory Value="..\lib\$(TargetCPU)-$(TargetOS)"/>
     </SearchPaths>
   </CompilerOptions>

@@ -5,7 +5,7 @@ unit routers;
 interface
 
 uses
-  Classes, SysUtils, httproute, HTTPDefs, om, fpjson, fpjsontopas;
+  Classes, SysUtils, httproute, HTTPDefs, om, fpjson;
 
 type
   { TRouter }
