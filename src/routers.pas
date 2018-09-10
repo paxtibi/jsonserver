@@ -10,30 +10,49 @@ uses
 type
   { TRouter }
 
+  { TOutput }
+
+  TOutput = class
+  private
+    FKey: string;
+    FTemplate: string;
+    procedure SetKey(AValue: string);
+    procedure SetTemplate(AValue: string);
+  published
+    property Template: string read FTemplate write SetTemplate;
+    property Key: string read FKey write SetKey;
+  end;
+
   TRouter = class(TComponent, IRouteInterface)
   private
     FDataSetName: string;
+    Foutput: TOutput;
     FPayload: string;
+    Fcompare: string;
     procedure SetDataSetName(AValue: string);
+    procedure Setoutput(AValue: TOutput);
     procedure SetPayload(AValue: string);
+    procedure Setcompare(AValue: string);
+  protected
+    procedure produceResponse(ARequest: TRequest; AResponse: TResponse; results: TJSONArray; templateObject: TJSONObject);
+    function match(aData: TJSONObject; filter: TJSONData): boolean; virtual;
   public
     function Data: TCollection;
     procedure HandleRequest(ARequest: TRequest; AResponse: TResponse); virtual;
-    property DataSetName: string read FDataSetName write SetDataSetName;
-    property Payload: string read FPayload write SetPayload;
+    property dataSetName: string read FDataSetName write SetDataSetName;
+    property payload: string read FPayload write SetPayload;
+    property output: TOutput read Foutput write Setoutput;
+    property compare: string read Fcompare write Setcompare;
   end;
 
   { TPayloadRouter }
 
   TPayloadRouter = class(TRouter)
   private
-    Fcompare: string;
     function matchInto(aData: TJSONData; anArray: TJSONArray): boolean;
     function match(aData: TJSONObject; filter: TJSONData): boolean;
-    procedure Setcompare(AValue: string);
   public
     procedure HandleRequest(ARequest: TRequest; AResponse: TResponse); override;
-    property compare: string read Fcompare write Setcompare;
   end;
 
   { TStopHandle }
@@ -68,20 +87,29 @@ begin
     exit(rmAll);
 end;
 
-{ TPayloadRouter }
+{ TOutput }
 
-procedure TPayloadRouter.Setcompare(AValue: string);
+procedure TOutput.SetKey(AValue: string);
 begin
-  if Fcompare = AValue then
+  if FKey = AValue then
     Exit;
-  Fcompare := AValue;
+  FKey := AValue;
 end;
+
+procedure TOutput.SetTemplate(AValue: string);
+begin
+  if FTemplate = AValue then
+    Exit;
+  FTemplate := AValue;
+end;
+
+{ TPayloadRouter }
 
 function TPayloadRouter.matchInto(aData: TJSONData; anArray: TJSONArray): boolean;
 var
   idx: integer;
 begin
-  result := False;
+  Result := False;
   for idx := 0 to anArray.Count - 1 do
   begin
     if anArray[idx].Value = aData.Value then
@@ -93,7 +121,7 @@ function TPayloadRouter.match(aData: TJSONObject; filter: TJSONData): boolean;
 var
   jsonData, jsonFilter: TJSONData;
 begin
-  result := False;
+  Result := False;
   if filter = nil then
     exit;
   if aData = nil then
@@ -103,11 +131,11 @@ begin
     jsonData := aData.Find(FCompare);
     if jsonFilter is TJSONArray then
     begin
-      result := matchInto(jsonData, jsonFilter as TJSONArray);
+      Result := matchInto(jsonData, jsonFilter as TJSONArray);
     end
     else
     begin
-      result := jsonFilter.Value = jsonData.Value;
+      Result := jsonFilter.Value = jsonData.Value;
     end;
   except
   end;
@@ -123,57 +151,74 @@ var
   jsonRecord: TJSONObject;
   jsonResponse: TJSONArray;
   payloadInput: TJSONObject;
-  parser: TJSONParser;
+  parser, remapParser: TJSONParser;
   matchParameters: boolean;
+  remapObject: TJSONData = nil;
+
   payloadString: string;
 begin
   Parameters := TStringList.Create;
   try
-    AResponse.ContentType := 'application/json';
-    httprouter.GetHTTPRoute(ARequest.URL, getRouteMethod(ARequest.Method), Parameters);
-    jsonResponse := TJSONArray.Create();
     try
-      dataSetFile := TFileStream.Create(self.FDataSetName, fmOpenRead);
-      parser := TJSONParser.Create(dataSetFile, [joUTF8, joStrict, joComments, joIgnoreTrailingComma]);
-      jsonParsed := parser.Parse;
-      FreeAndNil(parser);
+      AResponse.ContentType := 'application/json';
+      httprouter.GetHTTPRoute(ARequest.URL, getRouteMethod(ARequest.Method), Parameters);
+      jsonResponse := TJSONArray.Create();
+      try
+        dataSetFile := TFileStream.Create(self.FDataSetName, fmOpenRead);
+        parser := TJSONParser.Create(dataSetFile, [joUTF8, joStrict, joComments, joIgnoreTrailingComma]);
+        jsonParsed := parser.Parse;
+        FreeAndNil(parser);
 
-      payloadString := ARequest.Content;
-      parser := TJSONParser.Create(payloadString, [joUTF8, joStrict, joComments, joIgnoreTrailingComma]);
-      payloadInput := TJSONObject(parser.Parse);
-      FreeAndNil(parser);
+        payloadString := ARequest.Content;
+        parser := TJSONParser.Create(payloadString, [joUTF8, joStrict, joComments, joIgnoreTrailingComma]);
+        payloadInput := TJSONObject(parser.Parse);
+        FreeAndNil(parser);
 
-      if (jsonParsed is TJSONArray) then
-      begin
-        jsonData := jsonParsed as TJSONArray;
-        for dataSetIndex := 0 to jsonData.Count - 1 do
+        if (Output <> nil) then
         begin
-          matchParameters := True;
-          jsonRecord := TJSONObject(jsonData[dataSetIndex]);
-          matchParameters := match(jsonRecord, payloadInput);
-          if matchParameters then
-            jsonResponse.Add(jsonRecord.Clone);
+          Writeln('Using : ', output.Template);
+          remapParser := TJSONParser.Create(output.Template, [joUTF8, joStrict, joComments, joIgnoreTrailingComma]);
+          remapObject := remapParser.Parse;
+          if (remapObject is TJSONObject) then
+          begin
+            jsonResponse := (remapObject as TJSONObject).Find(output.key) as TJSONArray;
+          end;
+          FreeAndNil(remapParser);
         end;
-      end
-      else
-      begin
-        jsonResponse.Add(jsonParsed.Clone);
+        if (jsonParsed is TJSONArray) then
+        begin
+          jsonData := jsonParsed as TJSONArray;
+          for dataSetIndex := 0 to jsonData.Count - 1 do
+          begin
+            matchParameters := True;
+            jsonRecord := TJSONObject(jsonData[dataSetIndex]);
+            matchParameters := match(jsonRecord, payloadInput);
+            if matchParameters then
+              jsonResponse.Add(jsonRecord.Clone);
+          end;
+        end
+        else
+        begin
+          jsonResponse.Add(jsonParsed.Clone);
+        end;
+        produceResponse(ARequest, AResponse, jsonResponse, remapObject as TJSONObject);
+      except
+        on e: Exception do
+          Writeln(e.message);
       end;
-      if jsonResponse.Count = 1 then
-      begin
-        AResponse.Content := jsonResponse.Objects[0].AsJSON;
-      end
-      else
-      begin
-        AResponse.Content := jsonResponse.AsJSON;
-      end;
+
     finally
       if assigned(jsonParsed) then
         jsonParsed.Clear;
       jsonResponse.Clear;
-      freeAndNil(jsonResponse);
-      FreeAndNil(dataSetFile);
+      if (remapObject <> nil) then
+        FreeAndNil(remapObject)
+      else
+        FreeAndNil(jsonResponse);
+      if (dataSetFile <> nil) and (dataSetFile.Handle > 0) then
+        FreeAndNil(dataSetFile);
       FreeAndNil(jsonData);
+
     end;
   except
     on e: Exception do
@@ -202,6 +247,13 @@ begin
   FDataSetName := AValue;
 end;
 
+procedure TRouter.Setoutput(AValue: TOutput);
+begin
+  if Foutput = AValue then
+    Exit;
+  Foutput := AValue;
+end;
+
 procedure TRouter.SetPayload(AValue: string);
 begin
   if FPayload = AValue then
@@ -209,9 +261,37 @@ begin
   FPayload := AValue;
 end;
 
+procedure TRouter.Setcompare(AValue: string);
+begin
+  Fcompare:= AValue;
+end;
+
+procedure TRouter.produceResponse(ARequest: TRequest; AResponse: TResponse;
+  results: TJSONArray; templateObject: TJSONObject);
+begin
+  if templateObject = nil then
+  begin
+    if results.Count = 1 then
+    begin
+      AResponse.Content := (results as TJSONArray).Objects[0].AsJSON;
+    end
+    else
+    begin
+      AResponse.Content := results.AsJSON;
+    end;
+  end
+  else
+    AResponse.Content := templateObject.AsJSON;
+end;
+
+function TRouter.match(aData: TJSONObject; filter: TJSONData): boolean;
+begin
+
+end;
+
 function TRouter.Data: TCollection;
 begin
-  result := (Owner as TFakeJsonServer).Config.data;
+  Result := (Owner as TFakeJsonServer).Config.Data;
 end;
 
 procedure TRouter.HandleRequest(ARequest: TRequest; AResponse: TResponse);
@@ -220,73 +300,101 @@ var
   index, dataSetIndex: integer;
   aName, aValue, aDataSetValue: string;
   dataSetFile: TFileStream;
-  jsonParsed: TJSONData;
-  jsonData: TJSONArray;
+  jsonParsed: TJSONData = nil;
+  jsonData: TJSONArray = nil;
   jsonRecord: TJSONObject;
   jsonResponse: TJSONArray;
-  parser: TJSONParser;
+  parser, remapParser: TJSONParser;
   matchParameters: boolean;
+  remapObject: TJSONData = nil;
 begin
   Parameters := TStringList.Create;
   try
-    AResponse.ContentType := 'application/json';
-    httprouter.GetHTTPRoute(ARequest.URL, getRouteMethod(ARequest.Method), Parameters);
     try
-      dataSetFile := TFileStream.Create(self.FDataSetName, fmOpenRead);
-      parser := TJSONParser.Create(dataSetFile, [joUTF8, joStrict, joComments, joIgnoreTrailingComma]);
-      jsonResponse := TJSONArray.Create();
-      jsonParsed := parser.Parse;
-      if (jsonParsed is TJSONArray) then
-      begin
-        jsonData := jsonParsed as TJSONArray;
-        for dataSetIndex := 0 to jsonData.Count - 1 do
+      AResponse.ContentType := 'application/json';
+      httprouter.GetHTTPRoute(ARequest.URL, getRouteMethod(ARequest.Method), Parameters);
+      try
+        dataSetFile := TFileStream.Create(self.FDataSetName, fmOpenRead);
+        parser := TJSONParser.Create(dataSetFile, [joUTF8, joStrict, joComments, joIgnoreTrailingComma]);
+        if (output <> nil) and (output.Template <> '') and (output.Key <> '') then
         begin
-          matchParameters := True;
-          for index := 0 to Parameters.Count - 1 do
+          remapParser := TJSONParser.Create(output.template, [joUTF8, joStrict, joComments, joIgnoreTrailingComma]);
+          remapObject := remapParser.Parse;
+          if (remapObject is TJSONObject) then
           begin
-            Parameters.GetNameValue(index, aName, aValue);
-            if (aName <> '') then
-            begin
-              jsonRecord := jsonData.Objects[dataSetIndex];
-              if jsonRecord <> nil then
-              begin
-                aDataSetValue := jsonRecord.Get(aName);
-                if aDataSetValue <> aValue then
-                begin
-                  matchParameters := False;
-                  break;
-                end;
-              end;
-            end
-            else
-            begin
-              matchParameters := False;
-            end;
+            jsonResponse := (remapObject as TJSONObject).Find(output.key) as TJSONArray;
           end;
-          if matchParameters then
-            jsonResponse.Add(jsonRecord.Clone);
+          FreeAndNil(remapParser);
+        end
+        else
+        begin
+          jsonResponse := TJSONArray.Create();
         end;
-      end
-      else
-      begin
-        jsonResponse.Add(jsonParsed.Clone);
-      end;
-      if jsonResponse.Count = 1 then
-      begin
-        AResponse.Content := jsonResponse.Objects[0].AsJSON;
-      end
-      else
-      begin
-        AResponse.Content := jsonResponse.AsJSON;
+
+        jsonParsed := parser.Parse;
+
+        if (jsonParsed is TJSONArray) then
+        begin
+          jsonData := jsonParsed as TJSONArray;
+          for dataSetIndex := 0 to jsonData.Count - 1 do
+          begin
+            matchParameters := True;
+            for index := 0 to Parameters.Count - 1 do
+            begin
+              Parameters.GetNameValue(index, aName, aValue);
+              if (aName <> '') then
+              begin
+                jsonRecord := jsonData.Objects[dataSetIndex];
+                if jsonRecord <> nil then
+                begin
+                  aDataSetValue := jsonRecord.Get(aName);
+                  if aDataSetValue <> aValue then
+                  begin
+                    matchParameters := False;
+                    break;
+                  end;
+                end;
+              end
+              else
+              begin
+                matchParameters := False;
+              end;
+            end;
+            if matchParameters then
+              jsonResponse.Add(jsonRecord.Clone);
+          end;
+        end
+        else
+        begin
+          jsonResponse.Add(jsonParsed.Clone);
+        end;
+
+        produceResponse(ARequest, AResponse, jsonResponse, remapObject as TJSONObject);
+
+      except
+        on e: Exception do
+          Writeln(e.message);
       end;
     finally
       if assigned(jsonParsed) then
         jsonParsed.Clear;
-      jsonResponse.Clear;
-      freeAndNil(jsonResponse);
-      FreeAndNil(dataSetFile);
-      FreeAndNil(parser);
-      FreeAndNil(jsonData);
+      if (remapObject <> nil) then
+        FreeAndNil(remapObject)
+      else
+        FreeAndNil(jsonResponse);
+      try
+        if (dataSetFile <> nil) and (dataSetFile.Handle >= 0) then
+          FreeAndNil(dataSetFile);
+      except
+      end;
+      try
+        FreeAndNil(parser);
+      except
+      end;
+      try
+        FreeAndNil(jsonData);
+      except
+      end;
     end;
   except
     on e: Exception do

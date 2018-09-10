@@ -2,6 +2,7 @@ unit app;
 
 {$mode objfpc}{$H+}
 
+
 interface
 
 uses
@@ -40,6 +41,7 @@ type
   private
     FConfig: TConfigObject;
     FTimers: TTimersHolder;
+    procedure ExceptionHandle(Sender: TObject; E: Exception);
     procedure SetConfig(AValue: TConfigObject);
   public
     procedure StartRequest(Sender: TObject; ARequest: TRequest; AResponse: TResponse);
@@ -67,11 +69,11 @@ function TTimersHolderHelper.findByRequest(aRequest: TRequest): TTimerObject;
 var
   cursor: TTimerObject;
 begin
-  result := nil;
+  Result := nil;
   for cursor in self do
   begin
     if cursor.Request = aRequest then
-      result := cursor;
+      Result := cursor;
   end;
 end;
 
@@ -116,6 +118,15 @@ end;
 
 { TFakeJsonServer }
 
+
+procedure ShowRequestException(AResponse: TResponse; AnException: Exception; var handled: boolean);
+begin
+  Writeln(AResponse.Referer, ' ', AnException.ClassName, ' ', AnException.Message);
+  AResponse.Code := 500;
+  AResponse.Content := AnException.Message;
+  handled := True;
+end;
+
 constructor TFakeJsonServer.Create(TheOwner: TComponent);
 begin
   inherited Create(TheOwner);
@@ -142,10 +153,16 @@ begin
   FConfig := AValue;
 end;
 
+procedure TFakeJsonServer.ExceptionHandle(Sender: TObject; E: Exception);
+begin
+  Writeln(e.ClassName, e.Message);
+end;
+
 procedure TFakeJsonServer.StartRequest(Sender: TObject; ARequest: TRequest; AResponse: TResponse);
 var
   Timer: TTimerObject;
 begin
+  writeln(Format('%s:[%10s]%s', [ARequest.RemoteAddress, ARequest.Method, ARequest.URL]));
   Timer := TTimerObject.Create;
   Timer.Request := ARequest;
   Timer.requestor := Format('%s:[%10s]%s', [ARequest.RemoteAddress, ARequest.Method, ARequest.URL]);
@@ -175,6 +192,8 @@ var
 begin
   inherited Initialize;
   Application.Threaded := True;
+  OnException := @ExceptionHandle;
+  OnShowRequestException := @ShowRequestException;
   RedirectOnError := True;
   FileStream := TFileStream.Create('config.json', fmOpenRead);
   SetLength(jsonData, FileStream.Size);
@@ -184,7 +203,7 @@ begin
   try
     DeStreamer.JSONToObject(jsonData, FConfig);
     Application.Port := Config.config.Port;
-    for c in Config.Routers do
+    for c in Config.routers do
     begin
       r := TRouterObject(c);
       if (r.Method <> '') and (r.Route <> '') then
@@ -197,6 +216,14 @@ begin
         end
         else
           handle := TRouter.Create(Application);
+
+
+        if (r.outputTemplate <> '') and (r.outputKey <> '') then
+        begin
+          handle.output := TOutput.Create;
+          handle.output.Template := r.outputTemplate;
+          handle.output.Key := r.outputKey;
+        end;
         handle.DataSetName := r.dataset;
         handle.Payload := r.payload;
         HTTPRouter.RegisterRoute(r.Route, getRouteMethod(r.Method), handle);
@@ -237,6 +264,7 @@ initialization
 finalization
   DoneHTTP;
 end.
+
 
 
 

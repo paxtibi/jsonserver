@@ -10,6 +10,19 @@ uses
 
 type
 
+  { TOutputObject }
+
+  TOutputObject = class(TPersistent)
+  private
+    Fkey: string;
+    Ftemplate: string;
+    procedure Setkey(AValue: string);
+    procedure Settemplate(AValue: string);
+  published
+    property template: string read Ftemplate write Settemplate;
+    property key: string read Fkey write Setkey;
+  end;
+
   { TRouterObject }
 
   TRouterObject = class(TCollectionItem)
@@ -17,11 +30,17 @@ type
     Fcompare: string;
     Fdataset: string;
     FMethod: string;
+    Foutput: TOutputObject;
+    FoutputKey: String;
+    FoutputTemplate: String;
     FPayload: string;
     FRoute: string;
     procedure Setcompare(AValue: string);
     procedure Setdataset(AValue: string);
     procedure SetMethod(AValue: string);
+    procedure Setoutput(AValue: TOutputObject);
+    procedure SetoutputKey(AValue: String);
+    procedure SetoutputTemplate(AValue: String);
     procedure SetPayload(AValue: string);
     procedure SetRoute(AValue: string);
   published
@@ -30,6 +49,8 @@ type
     property dataset: string read FDataset write SetDataset;
     property payload: string read FPayload write SetPayload;
     property compare: string read Fcompare write Setcompare;
+    property outputTemplate: String read FoutputTemplate write SetoutputTemplate;
+    property outputKey: String read FoutputKey write SetoutputKey;
   end;
 
   { TApplicationConfigObject }
@@ -59,10 +80,26 @@ type
   published
     property config: TApplicationConfigObject read Fconfig write Setconfig;
     property routers: TCollection read FRouters;
-    property data: TCollection read FData;
+    property Data: TCollection read FData;
   end;
 
 implementation
+
+{ TOutputObject }
+
+procedure TOutputObject.Setkey(AValue: string);
+begin
+  if Fkey = AValue then
+    Exit;
+  Fkey := AValue;
+end;
+
+procedure TOutputObject.Settemplate(AValue: string);
+begin
+  if Ftemplate = AValue then
+    Exit;
+  Ftemplate := AValue;
+end;
 
 
 { TApplicationConfigObject }
@@ -86,6 +123,25 @@ begin
   if FMethod = AValue then
     Exit;
   FMethod := AValue;
+end;
+
+procedure TRouterObject.Setoutput(AValue: TOutputObject);
+begin
+  if Foutput = AValue then
+    Exit;
+  Foutput := AValue;
+end;
+
+procedure TRouterObject.SetoutputKey(AValue: String);
+begin
+  if FoutputKey=AValue then Exit;
+  FoutputKey:=AValue;
+end;
+
+procedure TRouterObject.SetoutputTemplate(AValue: String);
+begin
+  if FoutputTemplate=AValue then Exit;
+  FoutputTemplate:=AValue;
 end;
 
 procedure TRouterObject.SetPayload(AValue: string);
