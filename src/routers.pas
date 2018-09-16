@@ -8,7 +8,6 @@ uses
   Classes, SysUtils, httproute, HTTPDefs, om, fpjson;
 
 type
-  { TRouter }
 
   { TOutput }
 
@@ -23,6 +22,7 @@ type
     property Key: string read FKey write SetKey;
   end;
 
+  { TRouter }
   TRouter = class(TComponent, IRouteInterface)
   private
     FDataSetName: string;
@@ -263,11 +263,10 @@ end;
 
 procedure TRouter.Setcompare(AValue: string);
 begin
-  Fcompare:= AValue;
+  Fcompare := AValue;
 end;
 
-procedure TRouter.produceResponse(ARequest: TRequest; AResponse: TResponse;
-  results: TJSONArray; templateObject: TJSONObject);
+procedure TRouter.produceResponse(ARequest: TRequest; AResponse: TResponse; results: TJSONArray; templateObject: TJSONObject);
 begin
   if templateObject = nil then
   begin
@@ -286,7 +285,7 @@ end;
 
 function TRouter.match(aData: TJSONObject; filter: TJSONData): boolean;
 begin
-
+  result := True;
 end;
 
 function TRouter.Data: TCollection;
