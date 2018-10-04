@@ -43,6 +43,8 @@ type
     FTimers: TTimersHolder;
     procedure ExceptionHandle(Sender: TObject; E: Exception);
     procedure SetConfig(AValue: TConfigObject);
+  protected
+    procedure logRouters;
   public
     procedure StartRequest(Sender: TObject; ARequest: TRequest; AResponse: TResponse);
     procedure EndRequest(Sender: TObject; ARequest: TRequest; AResponse: TResponse);
@@ -153,6 +155,31 @@ begin
   FConfig := AValue;
 end;
 
+function SortRouters(c1, c2: TCollectionItem): integer;
+var
+  r1, r2: THTTPRoute;
+begin
+  r1 := c1 as THTTPRoute;
+  r2 := c2 as THTTPRoute;
+  Result := Ord(r1.Method) - Ord(r2.Method);
+  if Result = 0 then
+    Result := CompareStr(r1.URLPattern, r2.URLPattern);
+end;
+
+procedure TFakeJsonServer.logRouters;
+var
+  rh: THTTPRoute;
+  idx: integer;
+begin
+  if HTTPRouter.RouteCount > 0 then
+    HTTPRouter.Routes[0].Collection.Sort(@SortRouters);
+  for idx := 0 to HTTPRouter.RouteCount - 1 do
+  begin
+    rh := HTTPRouter.Routes[idx];
+    Writeln(rh.Method: 10, rh.URLPattern: -100);
+  end;
+end;
+
 procedure TFakeJsonServer.ExceptionHandle(Sender: TObject; E: Exception);
 begin
   Writeln(e.ClassName, e.Message);
@@ -216,8 +243,6 @@ begin
         end
         else
           handle := TRouter.Create(Application);
-
-
         if (r.outputTemplate <> '') and (r.outputKey <> '') then
         begin
           handle.output := TOutput.Create;
@@ -229,6 +254,7 @@ begin
         HTTPRouter.RegisterRoute(r.Route, getRouteMethod(r.Method), handle);
       end;
     end;
+    logRouters;
   finally
     FreeAndNil(DeStreamer);
     FreeAndNil(FileStream);
@@ -264,7 +290,5 @@ initialization
 finalization
   DoneHTTP;
 end.
-
-
 
 
