@@ -5,7 +5,7 @@ unit routers;
 interface
 
 uses
-  Classes, SysUtils, httproute, HTTPDefs, om, fpjson;
+  Classes, SysUtils, paxhttp.server, HTTPDefs, om, fpjson;
 
 type
 
@@ -23,7 +23,7 @@ type
   end;
 
   { TRouter }
-  TRouter = class(TComponent, IRouteInterface)
+  TRouter = class(TComponent, IRoute)
   private
     FDataSetName: string;
     Foutput: TOutput;
@@ -38,7 +38,7 @@ type
     function match(aData: TJSONObject; filter: TJSONData): boolean; virtual;
   public
     function Data: TCollection;
-    procedure HandleRequest(ARequest: TRequest; AResponse: TResponse); virtual;
+    procedure handleRequest(aReq: TRequest; aResp: TResponse; args: TStrings); virtual;
     property dataSetName: string read FDataSetName write SetDataSetName;
     property payload: string read FPayload write SetPayload;
     property output: TOutput read Foutput write Setoutput;
@@ -52,40 +52,20 @@ type
     function matchInto(aData: TJSONData; anArray: TJSONArray): boolean;
     function match(aData: TJSONObject; filter: TJSONData): boolean;
   public
-    procedure HandleRequest(ARequest: TRequest; AResponse: TResponse); override;
+    procedure handleRequest(aReq: TRequest; aResp: TResponse; args: TStrings); override;
   end;
 
   { TStopHandle }
 
   TStopHandle = class(TRouter)
-    procedure HandleRequest(ARequest: TRequest; AResponse: TResponse); override;
+    procedure handleRequest(aReq: TRequest; aResp: TResponse; args: TStrings); override;
   end;
 
-function getRouteMethod(aMethodString: string): TRouteMethod;
 
 implementation
 
 uses
   app, jsonparser, jsonscanner;
-
-function getRouteMethod(aMethodString: string): TRouteMethod;
-begin
-  aMethodString := upperCase(aMethodString);
-  if aMethodString = 'GET' then
-    exit(rmGet)
-  else if aMethodString = 'POST' then
-    exit(rmPost)
-  else if aMethodString = 'PUT' then
-    exit(rmPut)
-  else if aMethodString = 'OPTIONS' then
-    exit(rmOptions)
-  else if aMethodString = 'HEAD' then
-    exit(rmHead)
-  else if aMethodString = 'TRACE' then
-    exit(rmTrace)
-  else
-    exit(rmAll);
-end;
 
 { TOutput }
 
@@ -141,7 +121,7 @@ begin
   end;
 end;
 
-procedure TPayloadRouter.HandleRequest(ARequest: TRequest; AResponse: TResponse);
+procedure TPayloadRouter.handleRequest(aReq: TRequest; aResp: TResponse; args: TStrings);
 var
   Parameters: TStringList;
   dataSetIndex: integer;
@@ -160,16 +140,14 @@ begin
   Parameters := TStringList.Create;
   try
     try
-      AResponse.ContentType := 'application/json';
-      httprouter.GetHTTPRoute(ARequest.URL, getRouteMethod(ARequest.Method), Parameters);
+      aResp.ContentType := 'application/json';
       jsonResponse := TJSONArray.Create();
       try
         dataSetFile := TFileStream.Create(self.FDataSetName, fmOpenRead);
         parser := TJSONParser.Create(dataSetFile, [joUTF8, joStrict, joComments, joIgnoreTrailingComma]);
         jsonParsed := parser.Parse;
         FreeAndNil(parser);
-
-        payloadString := ARequest.Content;
+        payloadString := aReq.Content;
         parser := TJSONParser.Create(payloadString, [joUTF8, joStrict, joComments, joIgnoreTrailingComma]);
         payloadInput := TJSONObject(parser.Parse);
         FreeAndNil(parser);
@@ -201,7 +179,7 @@ begin
         begin
           jsonResponse.Add(jsonParsed.Clone);
         end;
-        produceResponse(ARequest, AResponse, jsonResponse, remapObject as TJSONObject);
+        produceResponse(aReq, aResp, jsonResponse, remapObject as TJSONObject);
       except
         on e: Exception do
           Writeln(e.message);
@@ -231,10 +209,10 @@ end;
 
 { TStopHandle }
 
-procedure TStopHandle.HandleRequest(ARequest: TRequest; AResponse: TResponse);
+procedure TStopHandle.handleRequest(aReq: TRequest; aResp: TResponse; args: TStrings);
 begin
-  AResponse.ContentType := 'application/text';
-  AResponse.Content := 'OK';
+  aResp.ContentType := 'application/text';
+  aResp.Content := 'OK';
   Application.Terminate;
 end;
 
@@ -293,9 +271,8 @@ begin
   Result := (Owner as TFakeJsonServer).Config.Data;
 end;
 
-procedure TRouter.HandleRequest(ARequest: TRequest; AResponse: TResponse);
+procedure TRouter.handleRequest(aReq: TRequest; aResp: TResponse; args: TStrings);
 var
-  Parameters: TStringList;
   index, dataSetIndex: integer;
   aName, aValue, aDataSetValue: string;
   dataSetFile: TFileStream;
@@ -307,11 +284,9 @@ var
   matchParameters: boolean;
   remapObject: TJSONData = nil;
 begin
-  Parameters := TStringList.Create;
   try
     try
-      AResponse.ContentType := 'application/json';
-      httprouter.GetHTTPRoute(ARequest.URL, getRouteMethod(ARequest.Method), Parameters);
+      aResp.ContentType := 'application/json';
       try
         dataSetFile := TFileStream.Create(self.FDataSetName, fmOpenRead);
         parser := TJSONParser.Create(dataSetFile, [joUTF8, joStrict, joComments, joIgnoreTrailingComma]);
@@ -329,21 +304,19 @@ begin
         begin
           jsonResponse := TJSONArray.Create();
         end;
-
         jsonParsed := parser.Parse;
-
         if (jsonParsed is TJSONArray) then
         begin
           jsonData := jsonParsed as TJSONArray;
           for dataSetIndex := 0 to jsonData.Count - 1 do
           begin
+            jsonRecord := jsonData.Objects[dataSetIndex];
             matchParameters := True;
-            for index := 0 to Parameters.Count - 1 do
+            for index := 0 to args.Count - 1 do
             begin
-              Parameters.GetNameValue(index, aName, aValue);
+              args.GetNameValue(index, aName, aValue);
               if (aName <> '') then
               begin
-                jsonRecord := jsonData.Objects[dataSetIndex];
                 if jsonRecord <> nil then
                 begin
                   aDataSetValue := jsonRecord.Get(aName);
@@ -368,7 +341,7 @@ begin
           jsonResponse.Add(jsonParsed.Clone);
         end;
 
-        produceResponse(ARequest, AResponse, jsonResponse, remapObject as TJSONObject);
+        produceResponse(aReq, aResp, jsonResponse, remapObject as TJSONObject);
 
       except
         on e: Exception do
@@ -401,7 +374,6 @@ begin
       Writeln(e.Message);
     end;
   end;
-  FreeAndNil(Parameters);
 end;
 
 
