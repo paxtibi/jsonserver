@@ -14,12 +14,12 @@
     },
     {
       "method": "GET",
-      "route": "/user/:id/info",
+      "route": "/user/{id}/info",
       "dataset": "user.json"
     },
     {
       "method": "GET",
-      "route": "/user/:id/last-login",
+      "route": "/user/{id}/last-login",
       "dataset": "user.json"
     },
     {
@@ -29,7 +29,7 @@
     },
     {
       "method": "POST",
-      "route": "/user/:id/update",
+      "route": "/user/{id}/update",
       "dataset": "post-user.json"
     },
     {
@@ -41,7 +41,7 @@
     },
     {
       "method": "DELETE",
-      "route": "/user/:id",
+      "route": "/user/{id}",
       "dataset": "delete-user.json"
     }
   ]
