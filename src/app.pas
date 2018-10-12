@@ -41,6 +41,7 @@ type
   private
     FConfig: TConfigObject;
     FTimers: TTimersHolder;
+    FWorkingPath: string;
     procedure ExceptionHandle(Sender: TObject; E: Exception);
     procedure SetConfig(AValue: TConfigObject);
   public
@@ -50,6 +51,7 @@ type
     constructor Create(TheOwner: TComponent); override;
     destructor Destroy; override;
     property Config: TConfigObject read FConfig write SetConfig;
+    class function normalizePath(Path: string): string;
   protected
     procedure Response404(ARequest: TRequest; AResponse: TResponse);
   end;
@@ -181,8 +183,46 @@ begin
   FTimers.stopTimer(timer);
 end;
 
+
+class function TFakeJsonServer.normalizePath(Path: string): string;
+var
+  idx: integer;
+  buffer: TStringList;
+begin
+  buffer := TStringList.Create;
+  Result := ExcludeTrailingPathDelimiter(Path);
+  buffer.LineBreak := DirectorySeparator;
+  buffer.Text := Result;
+  idx := 0;
+  writeln(buffer.Text);
+  while idx < buffer.Count - 1 do
+  begin
+    if buffer[idx] = '.' then
+    begin
+      buffer.delete(idx);
+      idx := -1; // restart;
+      writeln(buffer.Text);
+    end
+    else
+    if buffer[idx] = '..' then
+    begin
+      buffer.Delete(idx - 1);
+      buffer.delete(idx - 1);
+      writeln(buffer.Text);
+      idx := -1; // restart;
+    end;
+    inc(idx);
+  end;
+  result := ExcludeTrailingPathDelimiter(buffer.Text);
+  idx := 0;
+  writeln(Result);
+  FreeAndNil(buffer);
+end;
+
+
 procedure TFakeJsonServer.Initialize;
 var
+  configFileName: string;
   FileStream: TFileStream;
   DeStreamer: TJSONDeStreamer;
   c: TCollectionItem;
@@ -195,7 +235,11 @@ begin
   OnException := @ExceptionHandle;
   OnShowRequestException := @ShowRequestException;
   RedirectOnError := True;
-  FileStream := TFileStream.Create('config.json', fmOpenRead);
+  configFileName := IncludeTrailingPathDelimiter(GetCurrentDir) + 'config.json';
+  if not FileExists(configFileName) then
+    raise Exception.Create(configFileName + ' not found, terminate');
+
+  FileStream := TFileStream.Create(configFileName, fmOpenRead);
   SetLength(jsonData, FileStream.Size);
   FileStream.Read(jsonData[1], FileStream.Size);
   Writeln(jsonData);
@@ -260,5 +304,3 @@ initialization
 finalization
   DoneHTTP;
 end.
-
-

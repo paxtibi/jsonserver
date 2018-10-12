@@ -362,7 +362,7 @@ begin
       else
         FreeAndNil(jsonResponse);
       try
-        if (dataSetFile <> nil) and (dataSetFile.Handle >= 0) then
+        if (dataSetFile <> nil) and (dataSetFile.Handle <> 0) then
           FreeAndNil(dataSetFile);
       except
       end;

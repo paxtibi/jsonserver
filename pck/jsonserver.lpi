@@ -15,6 +15,7 @@
       <XPManifest>
         <TextDesc Value="Json Server"/>
       </XPManifest>
+      <Icon Value="0"/>
     </General>
     <BuildModes Count="1">
       <Item1 Name="Default" Default="True"/>
