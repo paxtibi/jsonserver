@@ -8,6 +8,7 @@ uses {$IFDEF UNIX} {$IFDEF UseCThreads}
   SysUtils,
   app,
   om,
+  log4d,
   paxhttp.server,
   routers { you can add units after this };
 
@@ -36,7 +37,6 @@ uses {$IFDEF UNIX} {$IFDEF UseCThreads}
           try
             parameter := ExtractFileDir(Paramstr(0)) + DirectorySeparator + ParamStr(idx);
             parameter := TFakeJsonServer.normalizePath(parameter);
-            writeln('Try to set ', parameter, ' as working path');
             if DirectoryExists(parameter) then
               chdir(parameter)
             else
@@ -47,7 +47,7 @@ uses {$IFDEF UNIX} {$IFDEF UseCThreads}
           except
             on E: Exception do
             begin
-              Writeln(e.Message);
+              TLogLog.GetLogger('server').Error('processing cli parameters', e);
               ExitCode := 1;
               exit;
             end;
@@ -60,11 +60,12 @@ uses {$IFDEF UNIX} {$IFDEF UseCThreads}
 
 
 begin
+  TLogPropertyConfigurator.Configure('log4d.properties');
   processParameters;
   Application.Initialize;
   Application.AddRoute('get', '/favicon.ico', @defaultFavIcon);
   Application.StopOnException := False;
-  WriteLn('Accept request on port :', Application.Port);
+  TLogLog.GetLogger('server').info(Format('Accept request on port :%d', [Application.Port]));
   Application.Run;
   Application.Free;
 end.

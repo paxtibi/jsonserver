@@ -6,7 +6,7 @@ unit app;
 interface
 
 uses
-  Classes, SysUtils, paxhttp.server, HTTPDefs, fpjson, fpjsonrtti, om, fgl;
+  Classes, SysUtils, paxhttp.server, custhttpapp, log4d, HTTPDefs, fpjson, fpjsonrtti, om, fgl;
 
 type
 
@@ -41,7 +41,6 @@ type
   private
     FConfig: TConfigObject;
     FTimers: TTimersHolder;
-    FWorkingPath: string;
     procedure ExceptionHandle(Sender: TObject; E: Exception);
     procedure SetConfig(AValue: TConfigObject);
   public
@@ -123,7 +122,9 @@ end;
 
 procedure ShowRequestException(AResponse: TResponse; AnException: Exception; var handled: boolean);
 begin
-  Writeln(AResponse.Referer, ' ', AnException.ClassName, ' ', AnException.Message);
+  TLogLog.GetLogger('error').error(
+    Format('serving : %s, exception: %s, message: %s', [AResponse.Referer, AnException.ClassName, AnException.Message])
+    );
   AResponse.Code := 500;
   AResponse.Content := AnException.Message;
   handled := True;
@@ -157,28 +158,30 @@ end;
 
 procedure TFakeJsonServer.ExceptionHandle(Sender: TObject; E: Exception);
 begin
-  Writeln(e.ClassName, e.Message);
+  TLogLog.GetLogger('server').Error(Sender, e);
 end;
 
 procedure TFakeJsonServer.StartRequest(Sender: TObject; ARequest: TRequest; AResponse: TResponse);
 var
   Timer: TTimerObject;
 begin
-  writeln(Format('%s:[%10s]%s', [ARequest.RemoteAddress, ARequest.Method, ARequest.URL]));
+  TLogLog.GetLogger('server').info(Format('%s:[%10s]%s', [ARequest.RemoteAddress, ARequest.Method, ARequest.URL]));
   Timer := TTimerObject.Create;
   Timer.Request := ARequest;
-  Timer.requestor := Format('%s:[%10s]%s', [ARequest.RemoteAddress, ARequest.Method, ARequest.URL]);
+  TLogLog.GetLogger('server').info(Format('%s:[%10s]%s', [ARequest.RemoteAddress, ARequest.Method, ARequest.URL]));
   FTimers.Add(Timer);
 end;
 
 procedure TFakeJsonServer.EndRequest(Sender: TObject; ARequest: TRequest; AResponse: TResponse);
 var
   timer: TTimerObject;
+  message: string;
 begin
   timer := FTimers.findByRequest(ARequest);
   if timer <> nil then
   begin
-    Writeln(Timer.requestor, ' served in :', FormatDateTime('hh:nn:ss:zzzz', Now - Timer.start));
+    message := Format('%s serverd in : %s ', [Timer.requestor, FormatDateTime('hh:nn:ss:zzzz', Now - Timer.start)]);
+    TLogLog.GetLogger('server').info(message);
   end;
   FTimers.stopTimer(timer);
 end;
@@ -194,28 +197,24 @@ begin
   buffer.LineBreak := DirectorySeparator;
   buffer.Text := Result;
   idx := 0;
-  writeln(buffer.Text);
   while idx < buffer.Count - 1 do
   begin
     if buffer[idx] = '.' then
     begin
       buffer.delete(idx);
       idx := -1; // restart;
-      writeln(buffer.Text);
     end
     else
     if buffer[idx] = '..' then
     begin
       buffer.Delete(idx - 1);
       buffer.delete(idx - 1);
-      writeln(buffer.Text);
       idx := -1; // restart;
     end;
     inc(idx);
   end;
   result := ExcludeTrailingPathDelimiter(buffer.Text);
   idx := 0;
-  writeln(Result);
   FreeAndNil(buffer);
 end;
 
@@ -232,8 +231,10 @@ var
 begin
   inherited Initialize;
   Application.Threaded := True;
+  Application.BeforeServe := @StartRequest;
+  Application.AfterServe := @EndRequest;
   OnException := @ExceptionHandle;
-  OnShowRequestException := @ShowRequestException;
+  //OnShowRequestException := @ShowRequestException;
   RedirectOnError := True;
   configFileName := IncludeTrailingPathDelimiter(GetCurrentDir) + 'config.json';
   if not FileExists(configFileName) then
@@ -242,7 +243,7 @@ begin
   FileStream := TFileStream.Create(configFileName, fmOpenRead);
   SetLength(jsonData, FileStream.Size);
   FileStream.Read(jsonData[1], FileStream.Size);
-  Writeln(jsonData);
+  TLogLog.getLogger('server').info(jsonData);
   DeStreamer := TJSONDeStreamer.Create(nil);
   try
     DeStreamer.JSONToObject(jsonData, FConfig);
@@ -252,7 +253,7 @@ begin
       r := TRouterObject(c);
       if (r.Method <> '') and (r.Route <> '') then
       begin
-        Writeln(r.Method, ' ', r.Route);
+        TLogLog.getLogger('server').info(Format('%s %s', [r.Method, r.Route]));
         if r.payload <> '' then
         begin
           handle := TPayloadRouter.Create(Application);

@@ -63,7 +63,7 @@ type
 implementation
 
 uses
-  app, jsonparser, jsonscanner;
+  Log4D, app, jsonparser, jsonscanner;
 
 { TOutput }
 
@@ -151,7 +151,7 @@ begin
         FreeAndNil(parser);
         if (Output <> nil) then
         begin
-          Writeln('Using : ', output.Template);
+          TLogLog.getLogger(aReq.URL).info(Format('Using : ', [output.Template]));
           remapParser := TJSONParser.Create(output.Template, [joUTF8, joStrict, joComments, joIgnoreTrailingComma]);
           remapObject := remapParser.Parse;
           if (remapObject is TJSONObject) then
@@ -179,7 +179,7 @@ begin
         produceResponse(aReq, aResp, jsonResponse, remapObject as TJSONObject);
       except
         on e: Exception do
-          Writeln(e.message);
+          TLogLog.getLogger(aReq.URL).Error(Self, e);
       end;
     finally
       try
@@ -195,15 +195,14 @@ begin
       except
         on E: Exception do
         begin
-          Writeln('An error freeing memory, check configuration file please:');
-          Writeln(e.Message);
+          TLogLog.GetLogger(aReq.URL).Error('An error freeing memory, check configuration file please:', e);
         end;
       end;
     end;
   except
     on e: Exception do
     begin
-      Writeln(e.Message);
+      TLogLog.GetLogger(aReq.URL).Error(self, e);
     end;
   end;
   FreeAndNil(Parameters);
@@ -352,7 +351,7 @@ begin
         produceResponse(aReq, aResp, jsonResponse, remapObject as TJSONObject);
       except
         on e: Exception do
-          Writeln(e.message);
+        TLogLog.GetLogger(aReq.URL).Error(self, e);
       end;
     finally
       if assigned(jsonParsed) then
@@ -378,7 +377,7 @@ begin
   except
     on e: Exception do
     begin
-      Writeln(e.Message);
+      TLogLog.GetLogger(aReq.URL).Error(self, e);
     end;
   end;
 end;

@@ -4,405 +4,523 @@
     <PathDelim Value="\"/>
     <Version Value="10"/>
     <BuildModes Active="Default"/>
-    <Units Count="39">
+    <Units Count="56">
       <Unit0>
         <Filename Value="jsonserver.lpr"/>
         <IsPartOfProject Value="True"/>
-        <IsVisibleTab Value="True"/>
-        <EditorIndex Value="2"/>
-        <TopLine Value="12"/>
-        <CursorPos Y="24"/>
-        <UsageCount Value="124"/>
+        <EditorIndex Value="1"/>
+        <TopLine Value="48"/>
+        <CursorPos X="24" Y="63"/>
+        <UsageCount Value="212"/>
         <Loaded Value="True"/>
       </Unit0>
       <Unit1>
         <Filename Value="..\src\app.pas"/>
         <IsPartOfProject Value="True"/>
-        <EditorIndex Value="1"/>
-        <TopLine Value="229"/>
-        <CursorPos X="26" Y="241"/>
-        <UsageCount Value="124"/>
+        <IsVisibleTab Value="True"/>
+        <EditorIndex Value="2"/>
+        <TopLine Value="175"/>
+        <CursorPos X="14" Y="189"/>
+        <UsageCount Value="212"/>
         <Loaded Value="True"/>
       </Unit1>
       <Unit2>
         <Filename Value="..\src\om.pas"/>
         <IsPartOfProject Value="True"/>
         <EditorIndex Value="-1"/>
-        <TopLine Value="84"/>
-        <CursorPos X="54" Y="118"/>
-        <UsageCount Value="123"/>
+        <TopLine Value="3"/>
+        <CursorPos X="51" Y="22"/>
+        <UsageCount Value="211"/>
       </Unit2>
       <Unit3>
         <Filename Value="..\src\routers.pas"/>
         <IsPartOfProject Value="True"/>
-        <TopLine Value="231"/>
-        <CursorPos X="34" Y="256"/>
-        <UsageCount Value="96"/>
-        <Loaded Value="True"/>
+        <EditorIndex Value="-1"/>
+        <UsageCount Value="198"/>
       </Unit3>
       <Unit4>
+        <Filename Value="..\src\log4l.pas"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="2803"/>
+        <CursorPos X="3" Y="2814"/>
+        <UsageCount Value="103"/>
+      </Unit4>
+      <Unit5>
         <Filename Value="C:\programmi\lazarus-1.8-32\fpc\3.0.4\source\packages\fcl-web\src\base\fphttpapp.pp"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="42"/>
         <CursorPos X="6" Y="64"/>
-        <UsageCount Value="10"/>
-      </Unit4>
-      <Unit5>
-        <Filename Value="C:\programmi\lazarus-1.8-32\fpc\3.0.4\source\packages\fcl-web\src\base\custhttpapp.pp"/>
-        <EditorIndex Value="-1"/>
-        <TopLine Value="151"/>
-        <UsageCount Value="10"/>
+        <UsageCount Value="9"/>
       </Unit5>
       <Unit6>
-        <Filename Value="C:\programmi\lazarus-1.8-32\fpc\3.0.4\source\packages\fcl-web\src\base\custweb.pp"/>
-        <EditorIndex Value="-1"/>
-        <TopLine Value="88"/>
+        <Filename Value="C:\programmi\lazarus-1.8-32\fpc\3.0.4\source\packages\fcl-web\src\base\custhttpapp.pp"/>
+        <EditorIndex Value="3"/>
+        <TopLine Value="152"/>
+        <CursorPos X="14" Y="165"/>
         <UsageCount Value="10"/>
+        <Loaded Value="True"/>
       </Unit6>
       <Unit7>
-        <Filename Value="C:\programmi\lazarus-1.8-32\fpc\3.0.4\source\packages\fcl-web\src\base\httproute.pp"/>
-        <EditorIndex Value="-1"/>
-        <CursorPos X="52" Y="118"/>
+        <Filename Value="C:\programmi\lazarus-1.8-32\fpc\3.0.4\source\packages\fcl-web\src\base\custweb.pp"/>
+        <EditorIndex Value="4"/>
         <UsageCount Value="10"/>
+        <Loaded Value="True"/>
       </Unit7>
       <Unit8>
+        <Filename Value="C:\programmi\lazarus-1.8-32\fpc\3.0.4\source\packages\fcl-web\src\base\httproute.pp"/>
+        <EditorIndex Value="5"/>
+        <TopLine Value="203"/>
+        <CursorPos X="15" Y="212"/>
+        <UsageCount Value="10"/>
+        <Loaded Value="True"/>
+      </Unit8>
+      <Unit9>
         <Filename Value="C:\programmi\lazarus-1.8-32\fpc\3.0.4\source\packages\fcl-web\src\base\httpdefs.pp"/>
         <UnitName Value="HTTPDefs"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="556"/>
-        <UsageCount Value="10"/>
-      </Unit8>
-      <Unit9>
+        <UsageCount Value="9"/>
+      </Unit9>
+      <Unit10>
         <Filename Value="C:\programmi\lazarus-1.8-32\fpc\3.0.4\source\packages\fcl-base\src\custapp.pp"/>
         <UnitName Value="CustApp"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="15"/>
         <CursorPos X="3" Y="30"/>
-        <UsageCount Value="11"/>
-      </Unit9>
-      <Unit10>
-        <Filename Value="C:\programmi\lazarus-1.8-32\fpc\3.0.4\source\rtl\inc\objpash.inc"/>
-        <EditorIndex Value="-1"/>
-        <TopLine Value="234"/>
-        <CursorPos X="20" Y="243"/>
-        <UsageCount Value="10"/>
+        <UsageCount Value="0"/>
       </Unit10>
       <Unit11>
+        <Filename Value="C:\programmi\lazarus-1.8-32\fpc\3.0.4\source\rtl\inc\objpash.inc"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="183"/>
+        <CursorPos X="23" Y="194"/>
+        <UsageCount Value="54"/>
+      </Unit11>
+      <Unit12>
         <Filename Value="C:\programmi\lazarus-1.8-32\fpc\3.0.4\source\rtl\inc\objpas.inc"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="930"/>
         <CursorPos X="11" Y="932"/>
-        <UsageCount Value="10"/>
-      </Unit11>
-      <Unit12>
+        <UsageCount Value="9"/>
+      </Unit12>
+      <Unit13>
         <Filename Value="C:\programmi\lazarus-1.8-32\fpc\3.0.4\source\packages\fcl-json\src\fpjson.pp"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="528"/>
         <CursorPos X="14" Y="538"/>
-        <UsageCount Value="10"/>
-      </Unit12>
-      <Unit13>
+        <UsageCount Value="9"/>
+      </Unit13>
+      <Unit14>
         <Filename Value="C:\programmi\lazarus-1.8-32\fpc\3.0.4\source\packages\fcl-json\src\fpjsonrtti.pp"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="106"/>
         <CursorPos X="3" Y="119"/>
-        <UsageCount Value="10"/>
-      </Unit13>
-      <Unit14>
+        <UsageCount Value="9"/>
+      </Unit14>
+      <Unit15>
         <Filename Value="C:\programmi\lazarus-1.8-32\fpc\3.0.4\source\rtl\objpas\classes\classesh.inc"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="1029"/>
         <CursorPos Y="1041"/>
-        <UsageCount Value="10"/>
-      </Unit14>
-      <Unit15>
-        <Filename Value="C:\programmi\lazarus-1.8-32\fpc\3.0.4\source\packages\fcl-json\src\fpjsontopas.pp"/>
-        <EditorIndex Value="-1"/>
-        <TopLine Value="134"/>
-        <CursorPos X="37" Y="145"/>
-        <UsageCount Value="4"/>
+        <UsageCount Value="9"/>
       </Unit15>
       <Unit16>
-        <Filename Value="C:\programmi\lazarus-1.8-32\fpc\3.0.4\source\packages\fcl-json\src\jsonparser.pp"/>
-        <EditorIndex Value="-1"/>
-        <TopLine Value="36"/>
-        <CursorPos X="17" Y="47"/>
-        <UsageCount Value="4"/>
-      </Unit16>
-      <Unit17>
-        <Filename Value="C:\programmi\lazarus-1.8-32\fpc\3.0.4\source\packages\fcl-base\src\contnrs.pp"/>
-        <EditorIndex Value="-1"/>
-        <TopLine Value="26"/>
-        <CursorPos X="48" Y="45"/>
-        <UsageCount Value="4"/>
-      </Unit17>
-      <Unit18>
-        <Filename Value="C:\programmi\lazarus-1.8-32\fpc\3.0.4\source\packages\fcl-json\src\jsonscanner.pp"/>
-        <EditorIndex Value="-1"/>
-        <TopLine Value="43"/>
-        <CursorPos X="66" Y="53"/>
-        <UsageCount Value="4"/>
-      </Unit18>
-      <Unit19>
         <Filename Value="C:\programmi\lazarus-1.8-32\fpc\3.0.4\source\rtl\objpas\fgl.pp"/>
         <EditorIndex Value="-1"/>
-        <TopLine Value="74"/>
-        <CursorPos X="14" Y="83"/>
-        <UsageCount Value="35"/>
-      </Unit19>
-      <Unit20>
+        <TopLine Value="140"/>
+        <CursorPos X="14" Y="149"/>
+        <UsageCount Value="80"/>
+      </Unit16>
+      <Unit17>
         <Filename Value="..\src\os\linux\httproute.pp"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="306"/>
         <CursorPos X="38" Y="319"/>
-        <UsageCount Value="10"/>
-      </Unit20>
-      <Unit21>
+        <UsageCount Value="9"/>
+      </Unit17>
+      <Unit18>
         <Filename Value="C:\usr\share\fpcsrc\packages\fcl-web\src\base\httpdefs.pp"/>
         <UnitName Value="HTTPDefs"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="393"/>
         <CursorPos X="51" Y="406"/>
-        <UsageCount Value="10"/>
-      </Unit21>
-      <Unit22>
+        <UsageCount Value="9"/>
+      </Unit18>
+      <Unit19>
         <Filename Value="..\src\os\linux\custhttpapp.pp"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="11"/>
         <CursorPos X="34" Y="22"/>
-        <UsageCount Value="10"/>
-      </Unit22>
-      <Unit23>
+        <UsageCount Value="9"/>
+      </Unit19>
+      <Unit20>
         <Filename Value="..\src\os\linux\custweb.pp"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="11"/>
         <CursorPos X="60" Y="23"/>
-        <UsageCount Value="10"/>
-      </Unit23>
-      <Unit24>
+        <UsageCount Value="9"/>
+      </Unit20>
+      <Unit21>
         <Filename Value="C:\programmi\lazarus-1.8-32\fpc\3.0.4\source\packages\fcl-web\src\base\fphttpserver.pp"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="780"/>
         <CursorPos X="27" Y="788"/>
-        <UsageCount Value="10"/>
-      </Unit24>
-      <Unit25>
+        <UsageCount Value="9"/>
+      </Unit21>
+      <Unit22>
         <Filename Value="C:\programmi\lazarus-1.8-32\fpc\3.0.4\source\packages\fcl-net\src\ssockets.pp"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="162"/>
         <CursorPos X="3" Y="179"/>
-        <UsageCount Value="10"/>
-      </Unit25>
-      <Unit26>
+        <UsageCount Value="9"/>
+      </Unit22>
+      <Unit23>
         <Filename Value="..\..\paxjson\pck\paxjson_package.pas"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="23" Y="15"/>
-        <UsageCount Value="10"/>
-      </Unit26>
-      <Unit27>
+        <UsageCount Value="9"/>
+      </Unit23>
+      <Unit24>
         <Filename Value="..\..\paxjson\src\js.pas"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="774"/>
         <CursorPos X="22" Y="789"/>
-        <UsageCount Value="10"/>
-      </Unit27>
-      <Unit28>
+        <UsageCount Value="9"/>
+      </Unit24>
+      <Unit25>
         <Filename Value="..\..\paxhttp\src\paxhttp.server.pas"/>
-        <EditorIndex Value="-1"/>
-        <TopLine Value="114"/>
-        <CursorPos X="20" Y="160"/>
-        <UsageCount Value="11"/>
-      </Unit28>
-      <Unit29>
+        <TopLine Value="461"/>
+        <CursorPos X="15" Y="479"/>
+        <UsageCount Value="10"/>
+        <Loaded Value="True"/>
+      </Unit25>
+      <Unit26>
         <Filename Value="C:\programmi\lazarus-1.8-32\fpc\3.0.4\source\rtl\objpas\classes\streams.inc"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="923"/>
         <CursorPos X="32" Y="930"/>
-        <UsageCount Value="10"/>
-      </Unit29>
-      <Unit30>
+        <UsageCount Value="9"/>
+      </Unit26>
+      <Unit27>
         <Filename Value="C:\programmi\lazarus-1.8-32\fpc\3.0.4\source\rtl\win\wininc\ascdef.inc"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="67"/>
-        <CursorPos X="10" Y="79"/>
+        <CursorPos X="18" Y="78"/>
         <UsageCount Value="10"/>
-      </Unit30>
-      <Unit31>
+      </Unit27>
+      <Unit28>
         <Filename Value="C:\programmi\lazarus-1.8-32\fpc\3.0.4\source\rtl\win32\classes.pp"/>
         <UnitName Value="Classes"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="19"/>
-        <UsageCount Value="10"/>
-      </Unit31>
-      <Unit32>
+        <UsageCount Value="9"/>
+      </Unit28>
+      <Unit29>
         <Filename Value="C:\programmi\lazarus-1.8-32\fpc\3.0.4\source\rtl\win32\windows.pp"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="50"/>
-        <UsageCount Value="10"/>
-      </Unit32>
-      <Unit33>
+        <UsageCount Value="9"/>
+      </Unit29>
+      <Unit30>
         <Filename Value="C:\programmi\lazarus-1.8-32\fpc\3.0.4\source\rtl\win\wininc\defines.inc"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="1202"/>
         <CursorPos X="5" Y="1214"/>
-        <UsageCount Value="10"/>
-      </Unit33>
-      <Unit34>
+        <UsageCount Value="9"/>
+      </Unit30>
+      <Unit31>
         <Filename Value="C:\programmi\lazarus-1.8-32\fpc\3.0.4\source\rtl\win\wininc\base.inc"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="406"/>
         <CursorPos X="3" Y="418"/>
-        <UsageCount Value="10"/>
-      </Unit34>
-      <Unit35>
+        <UsageCount Value="9"/>
+      </Unit31>
+      <Unit32>
         <Filename Value="C:\programmi\lazarus-1.8-32\fpc\3.0.4\source\rtl\objpas\sysutils\finah.inc"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="20"/>
         <CursorPos X="77" Y="39"/>
-        <UsageCount Value="10"/>
-      </Unit35>
-      <Unit36>
+        <UsageCount Value="9"/>
+      </Unit32>
+      <Unit33>
         <Filename Value="C:\programmi\lazarus-1.8-32\fpc\3.0.4\source\rtl\objpas\sysutils\fina.inc"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="494"/>
         <CursorPos X="51" Y="506"/>
-        <UsageCount Value="10"/>
-      </Unit36>
-      <Unit37>
+        <UsageCount Value="9"/>
+      </Unit33>
+      <Unit34>
         <Filename Value="C:\programmi\lazarus-1.8-32\fpc\3.0.4\source\rtl\inc\systemh.inc"/>
         <EditorIndex Value="-1"/>
-        <TopLine Value="501"/>
-        <CursorPos X="53" Y="517"/>
-        <UsageCount Value="10"/>
-      </Unit37>
-      <Unit38>
+        <TopLine Value="669"/>
+        <CursorPos X="3" Y="680"/>
+        <UsageCount Value="11"/>
+      </Unit34>
+      <Unit35>
         <Filename Value="C:\programmi\lazarus-1.8-32\fpc\3.0.4\source\rtl\objpas\sysutils\syshelph.inc"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="140"/>
         <CursorPos X="145" Y="151"/>
         <UsageCount Value="10"/>
+      </Unit35>
+      <Unit36>
+        <Filename Value="unit1.pas"/>
+        <EditorIndex Value="-1"/>
+        <WindowIndex Value="-1"/>
+        <CursorPos X="24" Y="6"/>
+        <UsageCount Value="9"/>
+      </Unit36>
+      <Unit37>
+        <Filename Value="..\..\paxlogging\src\paxlog.pas"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="12"/>
+        <CursorPos X="11" Y="25"/>
+        <UsageCount Value="55"/>
+      </Unit37>
+      <Unit38>
+        <Filename Value="..\..\paxlogging\src\paxmonolog.pas"/>
+        <EditorIndex Value="-1"/>
+        <CursorPos X="77" Y="11"/>
+        <UsageCount Value="2"/>
       </Unit38>
+      <Unit39>
+        <Filename Value="..\..\paxlogging\src\paxexceptions.pas"/>
+        <EditorIndex Value="-1"/>
+        <CursorPos X="17" Y="14"/>
+        <UsageCount Value="2"/>
+      </Unit39>
+      <Unit40>
+        <Filename Value="C:\programmi\lazarus-1.8-32\fpc\3.0.4\source\rtl\objpas\sysutils\sysstrh.inc"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="117"/>
+        <CursorPos X="10" Y="128"/>
+        <UsageCount Value="0"/>
+      </Unit40>
+      <Unit41>
+        <Filename Value="C:\programmi\lazarus-1.8-32\fpc\3.0.4\source\rtl\objpas\sysutils\sysstr.inc"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="952"/>
+        <CursorPos X="68" Y="963"/>
+        <UsageCount Value="0"/>
+      </Unit41>
+      <Unit42>
+        <Filename Value="C:\programmi\lazarus-1.8-32\fpc\3.0.4\source\rtl\objpas\sysutils\sysformt.inc"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="231"/>
+        <CursorPos X="59" Y="247"/>
+        <UsageCount Value="0"/>
+      </Unit42>
+      <Unit43>
+        <Filename Value="C:\programmi\lazarus-1.8-32\fpc\3.0.4\source\rtl\inc\rttih.inc"/>
+        <EditorIndex Value="-1"/>
+        <CursorPos X="11" Y="14"/>
+        <UsageCount Value="0"/>
+      </Unit43>
+      <Unit44>
+        <Filename Value="..\..\paxlogging\src\paxlog_configurators.pas"/>
+        <EditorIndex Value="-1"/>
+        <CursorPos X="31" Y="16"/>
+        <UsageCount Value="54"/>
+      </Unit44>
+      <Unit45>
+        <Filename Value="..\..\Log4L\Demo\main.pas"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="35"/>
+        <CursorPos X="31" Y="49"/>
+        <UsageCount Value="0"/>
+      </Unit45>
+      <Unit46>
+        <Filename Value="..\..\Log4d-for-Delphi\src\Log4D.pas"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="3969"/>
+        <CursorPos X="28" Y="3987"/>
+        <UsageCount Value="13"/>
+      </Unit46>
+      <Unit47>
+        <Filename Value="C:\programmi\lazarus-1.8-32\fpc\3.0.4\source\rtl\objpas\objpas.pp"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="59"/>
+        <CursorPos X="47" Y="71"/>
+        <UsageCount Value="11"/>
+      </Unit47>
+      <Unit48>
+        <Filename Value="..\..\paxcontainers\src\paxcollections.pas"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="48"/>
+        <CursorPos X="14" Y="54"/>
+        <UsageCount Value="21"/>
+      </Unit48>
+      <Unit49>
+        <Filename Value="..\src\Log4D.pas"/>
+        <IsPartOfProject Value="True"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="2892"/>
+        <CursorPos X="20" Y="2908"/>
+        <UsageCount Value="23"/>
+      </Unit49>
+      <Unit50>
+        <Filename Value="..\..\paxcontainers\src\paxexceptions.pas"/>
+        <EditorIndex Value="-1"/>
+        <UsageCount Value="10"/>
+      </Unit50>
+      <Unit51>
+        <Filename Value="C:\programmi\lazarus-1.8-32\fpc\3.0.4\source\rtl\inc\system.inc"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="1066"/>
+        <CursorPos X="3" Y="1068"/>
+        <UsageCount Value="11"/>
+      </Unit51>
+      <Unit52>
+        <Filename Value="C:\programmi\lazarus-1.8-32\components\lazutils\lazlogger.pas"/>
+        <UnitName Value="LazLogger"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="290"/>
+        <CursorPos X="11" Y="307"/>
+        <UsageCount Value="10"/>
+      </Unit52>
+      <Unit53>
+        <Filename Value="C:\programmi\lazarus-1.8-32\fpc\3.0.4\source\packages\fcl-base\src\streamio.pp"/>
+        <UnitName Value="StreamIO"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="34"/>
+        <CursorPos X="36" Y="41"/>
+        <UsageCount Value="10"/>
+      </Unit53>
+      <Unit54>
+        <Filename Value="C:\programmi\lazarus-1.8-32\fpc\3.0.4\source\rtl\objpas\sysutils\sysutilh.inc"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="266"/>
+        <CursorPos X="4" Y="277"/>
+        <UsageCount Value="10"/>
+      </Unit54>
+      <Unit55>
+        <Filename Value="C:\programmi\lazarus-1.8-32\fpc\3.0.4\source\rtl\inc\textrec.inc"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="21"/>
+        <CursorPos X="28" Y="33"/>
+        <UsageCount Value="10"/>
+      </Unit55>
     </Units>
     <JumpHistory Count="30" HistoryIndex="29">
       <Position1>
-        <Filename Value="..\src\app.pas"/>
-        <Caret Line="233" TopLine="223"/>
+        <Filename Value="C:\programmi\lazarus-1.8-32\fpc\3.0.4\source\packages\fcl-web\src\base\custhttpapp.pp"/>
+        <Caret Line="187" Column="33" TopLine="168"/>
       </Position1>
       <Position2>
-        <Filename Value="..\src\app.pas"/>
-        <Caret Line="234" TopLine="223"/>
+        <Filename Value="C:\programmi\lazarus-1.8-32\fpc\3.0.4\source\packages\fcl-web\src\base\custhttpapp.pp"/>
+        <Caret Line="192" Column="33" TopLine="173"/>
       </Position2>
       <Position3>
-        <Filename Value="..\src\app.pas"/>
-        <Caret Line="235" TopLine="223"/>
+        <Filename Value="C:\programmi\lazarus-1.8-32\fpc\3.0.4\source\packages\fcl-web\src\base\custhttpapp.pp"/>
+        <Caret Line="198" Column="32" TopLine="179"/>
       </Position3>
       <Position4>
-        <Filename Value="..\src\app.pas"/>
-        <Caret Line="236" TopLine="223"/>
+        <Filename Value="C:\programmi\lazarus-1.8-32\fpc\3.0.4\source\packages\fcl-web\src\base\custhttpapp.pp"/>
+        <Caret Line="203" Column="32" TopLine="184"/>
       </Position4>
       <Position5>
-        <Filename Value="..\src\app.pas"/>
-        <Caret Line="237" TopLine="223"/>
+        <Filename Value="C:\programmi\lazarus-1.8-32\fpc\3.0.4\source\packages\fcl-web\src\base\custhttpapp.pp"/>
+        <Caret Line="208" Column="32" TopLine="189"/>
       </Position5>
       <Position6>
-        <Filename Value="..\src\app.pas"/>
-        <Caret Line="238" Column="81" TopLine="223"/>
+        <Filename Value="C:\programmi\lazarus-1.8-32\fpc\3.0.4\source\packages\fcl-web\src\base\custhttpapp.pp"/>
+        <Caret Line="213" Column="32" TopLine="194"/>
       </Position6>
       <Position7>
-        <Filename Value="..\src\app.pas"/>
-        <Caret Line="233" TopLine="223"/>
+        <Filename Value="C:\programmi\lazarus-1.8-32\fpc\3.0.4\source\packages\fcl-web\src\base\custhttpapp.pp"/>
+        <Caret Line="218" Column="32" TopLine="199"/>
       </Position7>
       <Position8>
-        <Filename Value="..\src\app.pas"/>
-        <Caret Line="234" TopLine="223"/>
+        <Filename Value="C:\programmi\lazarus-1.8-32\fpc\3.0.4\source\packages\fcl-web\src\base\custhttpapp.pp"/>
+        <Caret Line="223" Column="33" TopLine="204"/>
       </Position8>
       <Position9>
-        <Filename Value="..\src\app.pas"/>
-        <Caret Line="235" TopLine="223"/>
+        <Filename Value="C:\programmi\lazarus-1.8-32\fpc\3.0.4\source\packages\fcl-web\src\base\custhttpapp.pp"/>
+        <Caret Line="228" Column="33" TopLine="209"/>
       </Position9>
       <Position10>
-        <Filename Value="..\src\app.pas"/>
-        <Caret Line="236" TopLine="223"/>
+        <Filename Value="C:\programmi\lazarus-1.8-32\fpc\3.0.4\source\packages\fcl-web\src\base\custhttpapp.pp"/>
+        <Caret Line="233" Column="33" TopLine="214"/>
       </Position10>
       <Position11>
-        <Filename Value="..\src\app.pas"/>
-        <Caret Line="237" TopLine="223"/>
+        <Filename Value="C:\programmi\lazarus-1.8-32\fpc\3.0.4\source\packages\fcl-web\src\base\custhttpapp.pp"/>
+        <Caret Line="238" Column="33" TopLine="219"/>
       </Position11>
       <Position12>
-        <Filename Value="..\src\app.pas"/>
-        <Caret Line="238" Column="16" TopLine="223"/>
+        <Filename Value="C:\programmi\lazarus-1.8-32\fpc\3.0.4\source\packages\fcl-web\src\base\custhttpapp.pp"/>
+        <Caret Line="243" Column="33" TopLine="224"/>
       </Position12>
       <Position13>
-        <Filename Value="jsonserver.lpr"/>
-        <Caret Line="21" TopLine="13"/>
+        <Filename Value="C:\programmi\lazarus-1.8-32\fpc\3.0.4\source\packages\fcl-web\src\base\custhttpapp.pp"/>
+        <Caret Line="248" Column="32" TopLine="229"/>
       </Position13>
       <Position14>
-        <Filename Value="jsonserver.lpr"/>
-        <Caret Line="22" TopLine="13"/>
+        <Filename Value="C:\programmi\lazarus-1.8-32\fpc\3.0.4\source\packages\fcl-web\src\base\custhttpapp.pp"/>
+        <Caret Line="253" Column="32" TopLine="234"/>
       </Position14>
       <Position15>
-        <Filename Value="jsonserver.lpr"/>
-        <Caret Line="23" TopLine="13"/>
+        <Filename Value="C:\programmi\lazarus-1.8-32\fpc\3.0.4\source\packages\fcl-web\src\base\custhttpapp.pp"/>
+        <Caret Line="258" Column="33" TopLine="239"/>
       </Position15>
       <Position16>
-        <Filename Value="jsonserver.lpr"/>
-        <Caret Line="24" TopLine="13"/>
+        <Filename Value="C:\programmi\lazarus-1.8-32\fpc\3.0.4\source\packages\fcl-web\src\base\custhttpapp.pp"/>
+        <Caret Line="268" Column="33" TopLine="249"/>
       </Position16>
       <Position17>
-        <Filename Value="jsonserver.lpr"/>
-        <Caret Line="25" TopLine="13"/>
+        <Filename Value="C:\programmi\lazarus-1.8-32\fpc\3.0.4\source\packages\fcl-web\src\base\custhttpapp.pp"/>
+        <Caret Line="27" Column="25" TopLine="16"/>
       </Position17>
       <Position18>
-        <Filename Value="jsonserver.lpr"/>
-        <Caret Line="22" TopLine="13"/>
+        <Filename Value="C:\programmi\lazarus-1.8-32\fpc\3.0.4\source\packages\fcl-web\src\base\custhttpapp.pp"/>
+        <Caret Line="101" Column="27" TopLine="82"/>
       </Position18>
       <Position19>
-        <Filename Value="jsonserver.lpr"/>
-        <Caret Line="21" TopLine="13"/>
+        <Filename Value="C:\programmi\lazarus-1.8-32\fpc\3.0.4\source\packages\fcl-web\src\base\custhttpapp.pp"/>
+        <Caret Line="103" Column="25" TopLine="84"/>
       </Position19>
       <Position20>
-        <Filename Value="jsonserver.lpr"/>
-        <Caret Line="22" TopLine="13"/>
+        <Filename Value="C:\programmi\lazarus-1.8-32\fpc\3.0.4\source\packages\fcl-web\src\base\custhttpapp.pp"/>
+        <Caret Line="164" Column="25" TopLine="145"/>
       </Position20>
       <Position21>
-        <Filename Value="jsonserver.lpr"/>
-        <Caret Line="23" TopLine="13"/>
+        <Filename Value="C:\programmi\lazarus-1.8-32\fpc\3.0.4\source\packages\fcl-web\src\base\custhttpapp.pp"/>
+        <Caret Line="166" Column="32" TopLine="147"/>
       </Position21>
       <Position22>
-        <Filename Value="jsonserver.lpr"/>
-        <Caret Line="24" TopLine="13"/>
+        <Filename Value="..\..\paxhttp\src\paxhttp.server.pas"/>
+        <Caret Line="116" Column="104" TopLine="112"/>
       </Position22>
       <Position23>
-        <Filename Value="jsonserver.lpr"/>
-        <Caret Line="25" TopLine="13"/>
+        <Filename Value="..\..\paxhttp\src\paxhttp.server.pas"/>
+        <Caret Line="149" Column="83" TopLine="128"/>
       </Position23>
       <Position24>
-        <Filename Value="jsonserver.lpr"/>
-        <Caret Line="27" TopLine="13"/>
+        <Filename Value="..\..\paxhttp\src\paxhttp.server.pas"/>
+        <Caret Line="495" Column="22" TopLine="484"/>
       </Position24>
       <Position25>
-        <Filename Value="jsonserver.lpr"/>
-        <Caret Line="28" TopLine="13"/>
+        <Filename Value="..\..\paxhttp\src\paxhttp.server.pas"/>
+        <Caret Line="479" Column="15" TopLine="461"/>
       </Position25>
       <Position26>
-        <Filename Value="jsonserver.lpr"/>
-        <Caret Line="58" TopLine="45"/>
+        <Filename Value="..\src\app.pas"/>
+        <Caret Line="173" TopLine="157"/>
       </Position26>
       <Position27>
-        <Filename Value="jsonserver.lpr"/>
-        <Caret Line="21" TopLine="21"/>
+        <Filename Value="..\src\app.pas"/>
+        <Caret Line="188" Column="93" TopLine="171"/>
       </Position27>
       <Position28>
-        <Filename Value="jsonserver.lpr"/>
-        <Caret Line="25" TopLine="21"/>
+        <Filename Value="..\src\app.pas"/>
+        <Caret Line="48" Column="20" TopLine="42"/>
       </Position28>
       <Position29>
-        <Filename Value="jsonserver.lpr"/>
-        <Caret Line="39" Column="31" TopLine="30"/>
+        <Filename Value="..\src\app.pas"/>
+        <Caret Line="183" Column="42" TopLine="175"/>
       </Position29>
       <Position30>
-        <Filename Value="jsonserver.lpr"/>
-        <Caret Line="25" TopLine="12"/>
+        <Filename Value="..\src\app.pas"/>
+        <Caret Line="184" TopLine="175"/>
       </Position30>
     </JumpHistory>
   </ProjectSession>
@@ -412,20 +530,14 @@
         <Kind Value="bpkSource"/>
         <WatchScope Value="wpsLocal"/>
         <WatchKind Value="wpkWrite"/>
-        <Source Value="jsonserver.lpr"/>
-        <Line Value="26"/>
+        <Source Value="..\src\log4l.pas"/>
+        <Line Value="3665"/>
       </Item1>
     </BreakPoints>
-    <Watches Count="3">
+    <Watches Count="1">
       <Item1>
-        <Expression Value="o"/>
+        <Expression Value="stringValue"/>
       </Item1>
-      <Item2>
-        <Expression Value="buffer[idx - 1]"/>
-      </Item2>
-      <Item3>
-        <Expression Value="buffer[idx]"/>
-      </Item3>
     </Watches>
   </Debugging>
 </CONFIG>

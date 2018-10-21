@@ -33,7 +33,7 @@
         <PackageName Value="paxhttp_package"/>
       </Item1>
     </RequiredPackages>
-    <Units Count="4">
+    <Units Count="5">
       <Unit0>
         <Filename Value="jsonserver.lpr"/>
         <IsPartOfProject Value="True"/>
@@ -50,6 +50,10 @@
         <Filename Value="..\src\routers.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit3>
+      <Unit4>
+        <Filename Value="..\src\Log4D.pas"/>
+        <IsPartOfProject Value="True"/>
+      </Unit4>
     </Units>
   </ProjectOptions>
   <CompilerOptions>
