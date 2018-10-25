@@ -68,4 +68,5 @@ begin
   TLogLog.GetLogger('server').info(Format('Accept request on port :%d', [Application.Port]));
   Application.Run;
   Application.Free;
+  halt(0);
 end.

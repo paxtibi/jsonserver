@@ -82,18 +82,19 @@ procedure TTimersHolderHelper.stopTimer(aTimer: TTimerObject);
 var
   idx: integer;
 begin
-  if (aTimer <> nil) then
-  begin
-    idx := IndexOf(aTimer);
-    if idx > -1 then
+  if self <> nil then
+    if (aTimer <> nil) then
     begin
-      Remove(aTimer);
-      try
-      except
-        aTimer.Free;
+      idx := IndexOf(aTimer);
+      if idx > -1 then
+      begin
+        Remove(aTimer);
+        try
+        except
+          aTimer.Free;
+        end;
       end;
     end;
-  end;
 end;
 
 { TTimerObject }
@@ -219,6 +220,13 @@ begin
 end;
 
 
+procedure handleStopRequest(aReq: TRequest; aResp: TResponse; args: TStrings);
+begin
+  aResp.ContentType := 'application/text';
+  aResp.Content := 'OK';
+  Application.Terminate;
+end;
+
 procedure TFakeJsonServer.Initialize;
 var
   configFileName: string;
@@ -276,7 +284,7 @@ begin
     FreeAndNil(DeStreamer);
     FreeAndNil(FileStream);
   end;
-  AddRoute('GET', '/stop', TStopHandle.Create(self));
+  AddRoute('GET', '/stop', @handleStopRequest);
 end;
 
 

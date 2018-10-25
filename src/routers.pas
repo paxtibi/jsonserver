@@ -53,13 +53,6 @@ type
     procedure handleRequest(aReq: TRequest; aResp: TResponse; args: TStrings); override;
   end;
 
-  { TStopHandle }
-
-  TStopHandle = class(TRouter)
-    procedure handleRequest(aReq: TRequest; aResp: TResponse; args: TStrings); override;
-  end;
-
-
 implementation
 
 uses
@@ -208,15 +201,6 @@ begin
   FreeAndNil(Parameters);
 end;
 
-{ TStopHandle }
-
-procedure TStopHandle.handleRequest(aReq: TRequest; aResp: TResponse; args: TStrings);
-begin
-  aResp.ContentType := 'application/text';
-  aResp.Content := 'OK';
-  Application.Terminate;
-end;
-
 { TRouter }
 
 procedure TRouter.SetDataSetName(AValue: string);
@@ -351,7 +335,7 @@ begin
         produceResponse(aReq, aResp, jsonResponse, remapObject as TJSONObject);
       except
         on e: Exception do
-        TLogLog.GetLogger(aReq.URL).Error(self, e);
+          TLogLog.GetLogger(aReq.URL).Error(self, e);
       end;
     finally
       if assigned(jsonParsed) then
