@@ -7,6 +7,8 @@
       <Flags>
         <MainUnitHasCreateFormStatements Value="False"/>
         <MainUnitHasScaledStatement Value="False"/>
+        <AlwaysBuild Value="True"/>
+        <UseDesignTimePackages Value="True"/>
       </Flags>
       <SessionStorage Value="InProjectDir"/>
       <MainUnit Value="0"/>
@@ -17,6 +19,10 @@
       </XPManifest>
       <Icon Value="0"/>
     </General>
+    <VersionInfo>
+      <UseVersionInfo Value="True"/>
+      <Language Value="0410"/>
+    </VersionInfo>
     <BuildModes Count="1">
       <Item1 Name="Default" Default="True"/>
     </BuildModes>
@@ -26,7 +32,6 @@
     <RunParams>
       <local>
         <FormatVersion Value="1"/>
-        <CommandLineParams Value="-wp ..\..\..\mce"/>
       </local>
     </RunParams>
     <RequiredPackages Count="1">
@@ -52,8 +57,9 @@
         <IsPartOfProject Value="True"/>
       </Unit3>
       <Unit4>
-        <Filename Value="..\src\Log4D.pas"/>
+        <Filename Value="..\src\log4d.pas"/>
         <IsPartOfProject Value="True"/>
+        <UnitName Value="Log4D"/>
       </Unit4>
     </Units>
   </ProjectOptions>
@@ -68,6 +74,11 @@
       <OtherUnitFiles Value="..\src;..\src\os\$(TargetOS)"/>
       <UnitOutputDirectory Value="..\lib\$(TargetCPU)-$(TargetOS)"/>
     </SearchPaths>
+    <Other>
+      <OtherDefines Count="1">
+        <Define0 Value="UseCThreads"/>
+      </OtherDefines>
+    </Other>
   </CompilerOptions>
   <Debugging>
     <Exceptions Count="4">

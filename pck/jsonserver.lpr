@@ -2,8 +2,9 @@ program jsonserver;
 
 {$mode objfpc}{$H+}
 
-uses {$IFDEF UNIX} {$IFDEF UseCThreads}
-  cthreads, {$ENDIF} {$ENDIF}
+uses {$IFDEF UNIX}
+  cthreads,
+  {$ENDIF}
   Classes,
   SysUtils,
   app,
@@ -19,7 +20,7 @@ uses {$IFDEF UNIX} {$IFDEF UseCThreads}
     idx: integer;
     parameter: string;
   begin
-    parameter := ExtractFileDir(Paramstr(0));
+    parameter := ExtractFileDir(ParamStr(0));
     parameter += DirectorySeparator + '..';
     parameter += DirectorySeparator + '..';
     parameter += DirectorySeparator + 'data';
@@ -33,9 +34,10 @@ uses {$IFDEF UNIX} {$IFDEF UseCThreads}
       begin
         if (ParamStr(idx) = '--workingpath') or (ParamStr(idx) = '-wp') then
         begin
-          inc(idx);
+          Inc(idx);
           try
-            parameter := ExtractFileDir(Paramstr(0)) + DirectorySeparator + ParamStr(idx);
+            parameter := ExtractFileDir(ParamStr(0)) + DirectorySeparator +
+              ParamStr(idx);
             parameter := TFakeJsonServer.normalizePath(parameter);
             if DirectoryExists(parameter) then
               chdir(parameter)
@@ -53,7 +55,7 @@ uses {$IFDEF UNIX} {$IFDEF UseCThreads}
             end;
           end;
         end;
-        inc(idx);
+        Inc(idx);
       end;
     end;
   end;
@@ -65,7 +67,9 @@ begin
   Application.Initialize;
   Application.AddRoute('get', '/favicon.ico', @defaultFavIcon);
   Application.StopOnException := False;
-  TLogLog.GetLogger('server').info(Format('Accept request on port :%d', [Application.Port]));
+  TLogLog.GetLogger('server').info(Format('Accept request on port :%d',
+    [Application.Port]));
+
   Application.Run;
   Application.Free;
   halt(0);
