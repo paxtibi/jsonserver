@@ -2243,11 +2243,7 @@ end;
 { Returns appropriate HTML headers. }
 function TLogHTMLLayout.GetHeader: string;
 begin
-  Result := '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" ' + '"http://www.w3.org/TR/html4/loose.dtd">' + CRLF + '<html>' + CRLF + '<head>' + CRLF + '<title>' + Title +
-    '</title>' + CRLF + '<style type="text/css">' + CRLF + '<!--' + CRLF + 'body, table {font-family: arial,sans-serif; font-size: x-small;}' + CRLF + 'th {background: #336699; color: #FFFFFF; text-align: left;}' +
-    CRLF + '-->' + CRLF + '</style>' + CRLF + '</head>' + CRLF + '<body bgcolor="#FFFFFF" topmargin="6" leftmargin="6">' + CRLF + '<hr size="1" noshade>' + CRLF + SessionStartMsg + ' ' +
-    DateTimeToStr(Now) + '<br>' + CRLF + '<br>' + CRLF + '<table cellspacing="0" cellpadding="4" border="1" ' + 'bordercolor="#224466" width="100%">' + CRLF + '<tr><th>' + TimeHdr + '</th><th>' +
-    ThreadHdr + '</th>' + '<th>' + LevelHdr + '</th><th>' + LoggerHdr + '</th>' + '<th>' + NDCHdr + '</th><th>' + MessageHdr + '</th></tr>' + CRLF;
+  Result := '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" ' + '"http://www.w3.org/TR/html4/loose.dtd">' + CRLF + '<html>' + CRLF + '<head>' + CRLF + '<title>' + Title + '</title>' + CRLF + '<style type="text/css">' + CRLF + '<!--' + CRLF + 'body, table {font-family: arial,sans-serif; font-size: x-small;}' + CRLF + 'th {background: #336699; color: #FFFFFF; text-align: left;}' + CRLF + '-->' + CRLF + '</style>' + CRLF + '</head>' + CRLF + '<body bgcolor="#FFFFFF" topmargin="6" leftmargin="6">' + CRLF + '<hr size="1" noshade>' + CRLF + SessionStartMsg + ' ' + DateTimeToStr(Now) + '<br>' + CRLF + '<br>' + CRLF + '<table cellspacing="0" cellpadding="4" border="1" ' + 'bordercolor="#224466" width="100%">' + CRLF + '<tr><th>' + TimeHdr + '</th><th>' + ThreadHdr + '</th>' + '<th>' + LevelHdr + '</th><th>' + LoggerHdr + '</th>' + '<th>' + NDCHdr + '</th><th>' + MessageHdr + '</th></tr>' + CRLF;
 end;
 
 { The HTML layout handles the exception contained in logging events.

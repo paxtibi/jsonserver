@@ -202,19 +202,19 @@ begin
   begin
     if buffer[idx] = '.' then
     begin
-      buffer.delete(idx);
+      buffer.Delete(idx);
       idx := -1; // restart;
     end
     else
     if buffer[idx] = '..' then
     begin
       buffer.Delete(idx - 1);
-      buffer.delete(idx - 1);
+      buffer.Delete(idx - 1);
       idx := -1; // restart;
     end;
-    inc(idx);
+    Inc(idx);
   end;
-  result := ExcludeTrailingPathDelimiter(buffer.Text);
+  Result := ExcludeTrailingPathDelimiter(buffer.Text);
   idx := 0;
   FreeAndNil(buffer);
 end;

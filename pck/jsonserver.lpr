@@ -3,8 +3,7 @@ program jsonserver;
 {$mode objfpc}{$H+}
 
 uses {$IFDEF UNIX}
-  cthreads,
-  {$ENDIF}
+  cthreads, {$ENDIF}
   Classes,
   SysUtils,
   app,
@@ -36,8 +35,7 @@ uses {$IFDEF UNIX}
         begin
           Inc(idx);
           try
-            parameter := ExtractFileDir(ParamStr(0)) + DirectorySeparator +
-              ParamStr(idx);
+            parameter := ExtractFileDir(ParamStr(0)) + DirectorySeparator + ParamStr(idx);
             parameter := TFakeJsonServer.normalizePath(parameter);
             if DirectoryExists(parameter) then
               chdir(parameter)
@@ -67,9 +65,7 @@ begin
   Application.Initialize;
   Application.AddRoute('get', '/favicon.ico', @defaultFavIcon);
   Application.StopOnException := False;
-  TLogLog.GetLogger('server').info(Format('Accept request on port :%d',
-    [Application.Port]));
-
+  TLogLog.GetLogger('server').info(Format('Accept request on port :%d', [Application.Port]));
   Application.Run;
   Application.Free;
   halt(0);

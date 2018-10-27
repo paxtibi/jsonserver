@@ -31,16 +31,16 @@ type
     Fdataset: string;
     FMethod: string;
     Foutput: TOutputObject;
-    FoutputKey: String;
-    FoutputTemplate: String;
+    FoutputKey: string;
+    FoutputTemplate: string;
     FPayload: string;
     FRoute: string;
     procedure Setcompare(AValue: string);
     procedure Setdataset(AValue: string);
     procedure SetMethod(AValue: string);
     procedure Setoutput(AValue: TOutputObject);
-    procedure SetoutputKey(AValue: String);
-    procedure SetoutputTemplate(AValue: String);
+    procedure SetoutputKey(AValue: string);
+    procedure SetoutputTemplate(AValue: string);
     procedure SetPayload(AValue: string);
     procedure SetRoute(AValue: string);
   published
@@ -49,8 +49,8 @@ type
     property dataset: string read FDataset write SetDataset;
     property payload: string read FPayload write SetPayload;
     property compare: string read Fcompare write Setcompare;
-    property outputTemplate: String read FoutputTemplate write SetoutputTemplate;
-    property outputKey: String read FoutputKey write SetoutputKey;
+    property outputTemplate: string read FoutputTemplate write SetoutputTemplate;
+    property outputKey: string read FoutputKey write SetoutputKey;
   end;
 
   { TApplicationConfigObject }
@@ -132,16 +132,18 @@ begin
   Foutput := AValue;
 end;
 
-procedure TRouterObject.SetoutputKey(AValue: String);
+procedure TRouterObject.SetoutputKey(AValue: string);
 begin
-  if FoutputKey=AValue then Exit;
-  FoutputKey:=AValue;
+  if FoutputKey = AValue then
+    Exit;
+  FoutputKey := AValue;
 end;
 
-procedure TRouterObject.SetoutputTemplate(AValue: String);
+procedure TRouterObject.SetoutputTemplate(AValue: string);
 begin
-  if FoutputTemplate=AValue then Exit;
-  FoutputTemplate:=AValue;
+  if FoutputTemplate = AValue then
+    Exit;
+  FoutputTemplate := AValue;
 end;
 
 procedure TRouterObject.SetPayload(AValue: string);

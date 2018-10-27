@@ -251,7 +251,7 @@ end;
 
 function TRouter.match(aData: TJSONObject; filter: TJSONData): boolean;
 begin
-  result := True;
+  Result := True;
 end;
 
 function TRouter.Data: TCollection;
