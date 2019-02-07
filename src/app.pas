@@ -6,7 +6,7 @@ unit app;
 interface
 
 uses
-  Classes, SysUtils, paxhttp.server, custhttpapp, log4d, HTTPDefs,
+  Classes, SysUtils, paxhttp.server, custhttpapp, HTTPDefs,
   fpjson, fpjsonrtti, om, fgl;
 
 type
@@ -52,6 +52,7 @@ type
     destructor Destroy; override;
     property Config: TConfigObject read FConfig write SetConfig;
     class function normalizePath(Path: string): string;
+    procedure InitializeRouters;
   protected
     procedure Response404(ARequest: TRequest; AResponse: TResponse);
   end;
@@ -60,10 +61,73 @@ var
   Application: TFakeJsonServer;
   ShowCleanUpErrors: boolean = False;
 
+procedure handleStopRequest(aReq: TRequest; aResp: TResponse; args: TStrings);
+procedure handleReloadRequest(aReq: TRequest; aResp: TResponse; args: TStrings);
+procedure handleEmitConfigRequest(aReq: TRequest; aResp: TResponse; args: TStrings);
+
 implementation
 
 uses
   dateutils, CustApp, jsonparser, routers;
+
+procedure handleStopRequest(aReq: TRequest; aResp: TResponse; args: TStrings);
+begin
+  aResp.ContentType := 'text/html';
+  aResp.Content := '<body><p>Bye!</p></body>';
+  Application.Terminate;
+end;
+
+procedure handleReloadRequest(aReq: TRequest; aResp: TResponse; args: TStrings);
+begin
+  Application.ClearRouters;
+  Application.Initialize;
+  aResp.ContentType := 'application/text';
+  aResp.Content := 'OK';
+end;
+
+procedure handleEmitConfigRequest(aReq: TRequest; aResp: TResponse; args: TStrings);
+const
+  scripts: array [0..4] of string = (
+    '<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">',
+    '<link rel="stylesheet" href="https://editor.swagger.io/dist/swagger-editor.css">',
+    '<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>',
+    '<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>',
+    '<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>');
+var
+  stringItem: string;
+  rc: TRouteContainer;
+begin
+  aResp.ContentType := 'text/html';
+  aResp.Content := '<html>' + LineEnding;
+  aResp.Content := aResp.Content + '  <head>' + LineEnding;
+  aResp.Content := aResp.Content + '  <!-- Latest compiled and minified CSS -->' + LineEnding;
+  for stringItem in scripts do
+  begin
+    aResp.Content := aResp.Content + stringItem + LineEnding;
+  end;
+  aResp.Content := aResp.Content + '  </head>' + LineEnding;
+  aResp.Content := aResp.Content + '  <body>' + LineEnding;
+  aResp.Content := aResp.Content + '    <div class="panel panel-primary">' + LineEnding;
+  aResp.Content := aResp.Content + '      <div class="panel-heading">' + LineEnding;
+  aResp.Content := aResp.Content + '        <h3 class="panel-title">Current Routers</h3>' + LineEnding;
+  aResp.Content := aResp.Content + '      </div>' + LineEnding;
+  aResp.Content := aResp.Content + '      <div class="card" style="width: 18rem;">' + LineEnding;
+  aResp.Content := aResp.Content + '        <div class="card-body">' + LineEnding;
+  aResp.Content := aResp.Content + '        <ul class="list-group list-group-flush">' + LineEnding;
+  for rc in Application.getRoutersList do
+  begin
+  aResp.Content := aResp.Content + Format('    <li class="list-group-item">%s', [LineEnding]);
+  aResp.Content := aResp.Content + Format('    <div class="swagger-ui opblock opblock-options">', [LineEnding]);
+  aResp.Content := aResp.Content + Format('    <div class="opblock-summary opblock-summary-options"><span class="opblock-summary-method">%s</span><span class="opblock-summary-path"><a class="nostyle"><span>%s</span></a></span><div class="opblock-summary-description">%s</div></div>', [rc.requestMethod, rc.urlPattern, '', LineEnding]);
+  aResp.Content := aResp.Content + Format('    </li>%s', [LineEnding]);
+  end;
+  aResp.Content := aResp.Content + '  </ul>' + LineEnding;
+  aResp.Content := aResp.Content + '</div>' + LineEnding;
+  aResp.Content := aResp.Content + '</div>' + LineEnding;
+  aResp.Content := aResp.Content + '    <div>' + LineEnding;
+  aResp.Content := aResp.Content + '  </body>' + LineEnding;
+  aResp.Content := aResp.Content + '</html>' + LineEnding;
+end;
 
 { TTimersHolderHelper }
 
@@ -75,7 +139,9 @@ begin
   for cursor in self do
   begin
     if cursor.Request = aRequest then
+    begin
       Result := cursor;
+    end;
   end;
 end;
 
@@ -84,6 +150,7 @@ var
   idx: integer;
 begin
   if self <> nil then
+  begin
     if (aTimer <> nil) then
     begin
       idx := IndexOf(aTimer);
@@ -96,6 +163,7 @@ begin
         end;
       end;
     end;
+  end;
 end;
 
 { TTimerObject }
@@ -103,14 +171,18 @@ end;
 procedure TTimerObject.SetRequest(AValue: TRequest);
 begin
   if FRequest = AValue then
+  begin
     Exit;
+  end;
   FRequest := AValue;
 end;
 
 procedure TTimerObject.Setrequestor(AValue: string);
 begin
   if Frequestor = AValue then
+  begin
     Exit;
+  end;
   Frequestor := AValue;
 end;
 
@@ -124,10 +196,7 @@ end;
 
 procedure ShowRequestException(AResponse: TResponse; AnException: Exception; var handled: boolean);
 begin
-  TLogLog.GetLogger('error').error(
-    Format('serving : %s, exception: %s, message: %s',
-    [AResponse.Referer, AnException.ClassName, AnException.Message])
-    );
+  Writeln(Format('serving : %s, exception: %s, message: %s', [AResponse.Referer, AnException.ClassName, AnException.Message]));
   AResponse.Code := 500;
   AResponse.Content := AnException.Message;
   handled := True;
@@ -149,45 +218,44 @@ end;
 
 procedure TFakeJsonServer.Response404(ARequest: TRequest; AResponse: TResponse);
 begin
-  AResponse.Content := '{ status :400 }';
+  AResponse.Content := '{ status : 400 }';
 end;
 
 procedure TFakeJsonServer.SetConfig(AValue: TConfigObject);
 begin
   if FConfig = AValue then
+  begin
     Exit;
+  end;
   FConfig := AValue;
 end;
 
 procedure TFakeJsonServer.ExceptionHandle(Sender: TObject; E: Exception);
 begin
-  TLogLog.GetLogger('server').Error(Sender, e);
+  Writeln(e.Message);
 end;
 
 procedure TFakeJsonServer.StartRequest(Sender: TObject; ARequest: TRequest; AResponse: TResponse);
 var
   Timer: TTimerObject;
 begin
-  TLogLog.GetLogger('server').info(Format('%s:[%10s]%s',
-    [ARequest.RemoteAddress, ARequest.Method, ARequest.URL]));
+  Writeln(Format('%s:[%10s]%s', [ARequest.RemoteAddress, ARequest.Method, ARequest.URL]));
   Timer := TTimerObject.Create;
   Timer.Request := ARequest;
-  TLogLog.GetLogger('server').info(Format('%s:[%10s]%s',
-    [ARequest.RemoteAddress, ARequest.Method, ARequest.URL]));
+  Writeln(Format('%s:[%10s]%s', [ARequest.RemoteAddress, ARequest.Method, ARequest.URL]));
   FTimers.Add(Timer);
 end;
 
 procedure TFakeJsonServer.EndRequest(Sender: TObject; ARequest: TRequest; AResponse: TResponse);
 var
-  timer: TTimerObject;
+  timer:   TTimerObject;
   message: string;
 begin
   timer := FTimers.findByRequest(ARequest);
   if timer <> nil then
   begin
-    message := Format('%s serverd in : %s ', [Timer.requestor,
-      FormatDateTime('hh:nn:ss:zzzz', Now - Timer.start)]);
-    TLogLog.GetLogger('server').info(message);
+    message := Format('%s serverd in : %s ', [Timer.requestor, FormatDateTime('hh:nn:ss:zzzz', Now - Timer.start)]);
+    Writeln(message);
   end;
   FTimers.stopTimer(timer);
 end;
@@ -195,7 +263,7 @@ end;
 
 class function TFakeJsonServer.normalizePath(Path: string): string;
 var
-  idx: integer;
+  idx:    integer;
   buffer: TStringList;
 begin
   buffer := TStringList.Create;
@@ -211,12 +279,12 @@ begin
       idx := -1; // restart;
     end
     else
-    if buffer[idx] = '..' then
-    begin
-      buffer.Delete(idx - 1);
-      buffer.Delete(idx - 1);
-      idx := -1; // restart;
-    end;
+      if buffer[idx] = '..' then
+      begin
+        buffer.Delete(idx - 1);
+        buffer.Delete(idx - 1);
+        idx := -1; // restart;
+      end;
     Inc(idx);
   end;
   Result := ExcludeTrailingPathDelimiter(buffer.Text);
@@ -224,38 +292,26 @@ begin
   FreeAndNil(buffer);
 end;
 
-
-procedure handleStopRequest(aReq: TRequest; aResp: TResponse; args: TStrings);
-begin
-  aResp.ContentType := 'application/text';
-  aResp.Content := 'OK';
-  Application.Terminate;
-end;
-
-procedure TFakeJsonServer.Initialize;
+procedure TFakeJsonServer.InitializeRouters;
 var
   configFileName: string;
   FileStream: TFileStream;
   DeStreamer: TJSONDeStreamer;
-  c: TCollectionItem;
-  r: TRouterObject;
+  c:      TCollectionItem;
+  r:      TRouterObject;
   jsonData: TJSONStringType;
   handle: TRouter;
 begin
-  inherited Initialize;
-  Application.Threaded := True;
-  Application.BeforeServe := @StartRequest;
-  Application.AfterServe := @EndRequest;
-  OnException := @ExceptionHandle;
-  RedirectOnError := True;
   configFileName := IncludeTrailingPathDelimiter(GetCurrentDir) + 'config.json';
   if not FileExists(configFileName) then
+  begin
     raise Exception.Create(configFileName + ' not found, terminate');
+  end;
 
   FileStream := TFileStream.Create(configFileName, fmOpenRead);
   SetLength(jsonData, FileStream.Size);
   FileStream.Read(jsonData[1], FileStream.Size);
-  TLogLog.getLogger('server').info(jsonData);
+  Writeln(jsonData);
   DeStreamer := TJSONDeStreamer.Create(nil);
   try
     DeStreamer.JSONToObject(jsonData, FConfig);
@@ -265,14 +321,15 @@ begin
       r := TRouterObject(c);
       if (r.Method <> '') and (r.Route <> '') then
       begin
-        //TLogLog.getLogger('server').info(Format('%s %s', [r.Method, r.Route]));
         if r.payload <> '' then
         begin
           handle := TPayloadRouter.Create(Application);
           TPayloadRouter(handle).compare := r.compare;
         end
         else
+        begin
           handle := TRouter.Create(Application);
+        end;
         if (r.outputTemplate <> '') and (r.outputKey <> '') then
         begin
           handle.output := TOutput.Create;
@@ -282,21 +339,21 @@ begin
         handle.DataSetName := r.dataset;
         handle.Payload := r.payload;
         handle.url := r.route;
-        //TLogLog.getLogger('server').info(Format('Dataset:%s Payload:%s',          [handle.dataSetName, r.payload]));
         if (handle.dataSetName <> '') then
         begin
           if FileExists(handle.dataSetName) then
-            TLogLog.getLogger('server').info(Format('Dataset %s OK',              [handle.dataSetName]))
+          begin
+            Writeln(Format('Dataset %s OK', [handle.dataSetName]));
+          end
           else
-            TLogLog.getLogger('server').Error(Format('Dataset %s ERROR',
-              [handle.dataSetName]));
+          begin
+            Writeln(Format('Dataset %s ERROR', [handle.dataSetName]));
+          end;
         end
         else
         begin
-          TLogLog.getLogger('server').info('Dataset not provided');
+          Writeln('Dataset not provided');
         end;
-
-
         AddRoute(r.method, r.route, handle);
       end;
     end;
@@ -304,8 +361,19 @@ begin
     FreeAndNil(DeStreamer);
     FreeAndNil(FileStream);
   end;
-  AddRoute('GET', '/stop', @handleStopRequest);
-  TLogLog.GetLogger('server').Debug('Routers count %d', [FRoutes.Count]);
+  Writeln(Format('Routers count %d', [FRoutes.Count]));
+end;
+
+
+procedure TFakeJsonServer.Initialize;
+begin
+  inherited Initialize;
+  Application.Threaded := True;
+  Application.BeforeServe := @StartRequest;
+  Application.AfterServe := @EndRequest;
+  OnException := @ExceptionHandle;
+  RedirectOnError := True;
+  initializeRouters;
 end;
 
 
@@ -313,18 +381,24 @@ procedure InitHTTP;
 begin
   Application := TFakeJsonServer.Create(nil);
   if not assigned(CustomApplication) then
+  begin
     CustomApplication := Application;
+  end;
 end;
 
 procedure DoneHTTP;
 begin
   if CustomApplication = Application then
+  begin
     CustomApplication := nil;
+  end;
   try
     FreeAndNil(Application);
   except
     if ShowCleanUpErrors then
+    begin
       raise;
+    end;
   end;
 end;
 

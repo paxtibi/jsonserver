@@ -1,8 +1,9 @@
 program jsonserver;
 
 {$mode objfpc}{$H+}
-
-{$define UseCThreads}
+{$IFNDEF    Windows}
+ {$define UseCThreads}
+{$ENDIF}
 
 uses {$IFDEF UseCThreads}
   cthreads, {$ENDIF}
@@ -26,7 +27,9 @@ uses {$IFDEF UseCThreads}
     parameter += DirectorySeparator + 'data';
     parameter := TFakeJsonServer.normalizePath(parameter);
     if DirectoryExists(parameter) then
+    begin
       chdir(parameter);
+    end;
     idx := 1;
     if ParamCount <> 0 then
     begin
@@ -46,7 +49,9 @@ uses {$IFDEF UseCThreads}
             end;
             parameter := TFakeJsonServer.normalizePath(parameter);
             if DirectoryExists(parameter) then
-              chdir(parameter)
+            begin
+              chdir(parameter);
+            end
             else
             begin
               Application.Terminate;
@@ -71,6 +76,9 @@ begin
   processParameters;
   Application.Initialize;
   Application.AddRoute('get', '/favicon.ico', @defaultFavIcon);
+  Application.AddRoute('GET', '/server/stop', @handleStopRequest);
+  Application.AddRoute('GET', '/server/reload', @handleReloadRequest);
+  Application.AddRoute('GET', '/server/config', @handleEmitConfigRequest);
   Application.StopOnException := False;
   Writeln(Format('Accept request on port :%d', [Application.Port]));
   Application.Run;
