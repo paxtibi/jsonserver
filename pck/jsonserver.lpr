@@ -2,13 +2,14 @@ program jsonserver;
 
 {$mode objfpc}{$H+}
 
-uses {$IFDEF UNIX}
+{$define UseCThreads}
+
+uses {$IFDEF UseCThreads}
   cthreads, {$ENDIF}
   Classes,
   SysUtils,
   app,
   om,
-  log4d,
   paxhttp.server,
   routers { you can add units after this };
 
@@ -35,7 +36,14 @@ uses {$IFDEF UNIX}
         begin
           Inc(idx);
           try
-            parameter := ExtractFileDir(ParamStr(0)) + DirectorySeparator + ParamStr(idx);
+            if ParamStr(idx)[1] = DirectorySeparator then
+            begin
+              parameter := ParamStr(idx);
+            end
+            else
+            begin
+              parameter := '.';
+            end;
             parameter := TFakeJsonServer.normalizePath(parameter);
             if DirectoryExists(parameter) then
               chdir(parameter)
@@ -47,7 +55,7 @@ uses {$IFDEF UNIX}
           except
             on E: Exception do
             begin
-              TLogLog.GetLogger('server').Error('processing cli parameters', e);
+              Writeln('processing cli parameters', e.message);
               ExitCode := 1;
               exit;
             end;
@@ -60,13 +68,11 @@ uses {$IFDEF UNIX}
 
 
 begin
-  TLogPropertyConfigurator.Configure('log4d.properties');
   processParameters;
   Application.Initialize;
   Application.AddRoute('get', '/favicon.ico', @defaultFavIcon);
   Application.StopOnException := False;
-  TLogLog.GetLogger('server').info(Format('Accept request on port :%d', [Application.Port]));
+  Writeln(Format('Accept request on port :%d', [Application.Port]));
   Application.Run;
   Application.Free;
-  halt(0);
 end.

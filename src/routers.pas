@@ -27,10 +27,12 @@ type
     Foutput: TOutput;
     FPayload: string;
     Fcompare: string;
+    Furl: string;
     procedure SetDataSetName(AValue: string);
     procedure Setoutput(AValue: TOutput);
     procedure SetPayload(AValue: string);
     procedure Setcompare(AValue: string);
+    procedure Seturl(AValue: string);
   protected
     procedure produceResponse(ARequest: TRequest; AResponse: TResponse; results: TJSONArray; templateObject: TJSONObject);
     function match(aData: TJSONObject; filter: TJSONData): boolean; virtual;
@@ -41,6 +43,7 @@ type
     property payload: string read FPayload write SetPayload;
     property output: TOutput read Foutput write Setoutput;
     property compare: string read Fcompare write Setcompare;
+    property url: string read Furl write Seturl;
   end;
 
   { TPayloadRouter }
@@ -56,7 +59,7 @@ type
 implementation
 
 uses
-  Log4D, app, jsonparser, jsonscanner;
+  app, jsonparser, jsonscanner;
 
 { TOutput }
 
@@ -106,7 +109,10 @@ begin
     end
     else
     begin
-      Result := jsonFilter.Value = jsonData.Value;
+      if jsonFilter <> nil then
+        Result := jsonFilter.Value = jsonData.Value
+      else
+        Result := True;
     end;
   except
   end;
@@ -135,17 +141,20 @@ begin
       jsonResponse := TJSONArray.Create();
       try
         dataSetFile := TFileStream.Create(self.FDataSetName, fmOpenRead);
-        parser := TJSONParser.Create(dataSetFile, [joUTF8, joStrict, joComments, joIgnoreTrailingComma]);
+        parser := TJSONParser.Create(dataSetFile, [joUTF8, joStrict,
+          joComments, joIgnoreTrailingComma]);
         jsonParsed := parser.Parse;
         FreeAndNil(parser);
         payloadString := aReq.Content;
-        parser := TJSONParser.Create(payloadString, [joUTF8, joStrict, joComments, joIgnoreTrailingComma]);
+        parser := TJSONParser.Create(payloadString,
+          [joUTF8, joStrict, joComments, joIgnoreTrailingComma]);
         payloadInput := TJSONObject(parser.Parse);
         FreeAndNil(parser);
         if (Output <> nil) then
         begin
-          TLogLog.getLogger(aReq.URL).info(Format('Using : ', [output.Template]));
-          remapParser := TJSONParser.Create(output.Template, [joUTF8, joStrict, joComments, joIgnoreTrailingComma]);
+          Writeln(Format('Using : ', [output.Template]));
+          remapParser := TJSONParser.Create(output.Template,
+            [joUTF8, joStrict, joComments, joIgnoreTrailingComma]);
           remapObject := remapParser.Parse;
           if (remapObject is TJSONObject) then
           begin
@@ -172,7 +181,7 @@ begin
         produceResponse(aReq, aResp, jsonResponse, remapObject as TJSONObject);
       except
         on e: Exception do
-          TLogLog.getLogger(aReq.URL).Error(Self, e);
+          Writeln(e.message);
       end;
     finally
       try
@@ -188,14 +197,14 @@ begin
       except
         on E: Exception do
         begin
-          TLogLog.GetLogger(aReq.URL).Error('An error freeing memory, check configuration file please:', e);
+          Writeln('An error freeing memory, check configuration file please:', e.message);
         end;
       end;
     end;
   except
     on e: Exception do
     begin
-      TLogLog.GetLogger(aReq.URL).Error(self, e);
+      Writeln(e.message);
     end;
   end;
   FreeAndNil(Parameters);
@@ -227,6 +236,13 @@ end;
 procedure TRouter.Setcompare(AValue: string);
 begin
   Fcompare := AValue;
+end;
+
+procedure TRouter.Seturl(AValue: string);
+begin
+  if Furl = AValue then
+    Exit;
+  Furl := AValue;
 end;
 
 procedure TRouter.produceResponse(ARequest: TRequest; AResponse: TResponse; results: TJSONArray; templateObject: TJSONObject);
@@ -273,6 +289,7 @@ var
   matchParameters: boolean;
   remapObject: TJSONData = nil;
 begin
+  Writeln(Format('%s %s', [self.url, self.dataSetName]));
   try
     try
       aResp.ContentType := 'application/json';
@@ -280,14 +297,17 @@ begin
         if (self.FDataSetName <> '') then
         begin
           dataSetFile := TFileStream.Create(self.FDataSetName, fmOpenRead);
-          parser := TJSONParser.Create(dataSetFile, [joUTF8, joStrict, joComments, joIgnoreTrailingComma]);
+          parser := TJSONParser.Create(dataSetFile,
+            [joUTF8, joStrict, joComments, joIgnoreTrailingComma]);
           if (output <> nil) and (output.Template <> '') and (output.Key <> '') then
           begin
-            remapParser := TJSONParser.Create(output.template, [joUTF8, joStrict, joComments, joIgnoreTrailingComma]);
+            remapParser := TJSONParser.Create(output.template,
+              [joUTF8, joStrict, joComments, joIgnoreTrailingComma]);
             remapObject := remapParser.Parse;
             if (remapObject is TJSONObject) then
             begin
-              jsonResponse := (remapObject as TJSONObject).Find(output.key) as TJSONArray;
+              jsonResponse := (remapObject as TJSONObject).Find(output.key) as
+                TJSONArray;
             end;
             FreeAndNil(remapParser);
           end
@@ -335,7 +355,7 @@ begin
         produceResponse(aReq, aResp, jsonResponse, remapObject as TJSONObject);
       except
         on e: Exception do
-          TLogLog.GetLogger(aReq.URL).Error(self, e);
+          Writeln(e.Message);
       end;
     finally
       if assigned(jsonParsed) then
@@ -361,7 +381,7 @@ begin
   except
     on e: Exception do
     begin
-      TLogLog.GetLogger(aReq.URL).Error(self, e);
+      Writeln(e.Message);
     end;
   end;
 end;

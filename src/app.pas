@@ -6,7 +6,8 @@ unit app;
 interface
 
 uses
-  Classes, SysUtils, paxhttp.server, custhttpapp, log4d, HTTPDefs, fpjson, fpjsonrtti, om, fgl;
+  Classes, SysUtils, paxhttp.server, custhttpapp, log4d, HTTPDefs,
+  fpjson, fpjsonrtti, om, fgl;
 
 type
 
@@ -124,7 +125,8 @@ end;
 procedure ShowRequestException(AResponse: TResponse; AnException: Exception; var handled: boolean);
 begin
   TLogLog.GetLogger('error').error(
-    Format('serving : %s, exception: %s, message: %s', [AResponse.Referer, AnException.ClassName, AnException.Message])
+    Format('serving : %s, exception: %s, message: %s',
+    [AResponse.Referer, AnException.ClassName, AnException.Message])
     );
   AResponse.Code := 500;
   AResponse.Content := AnException.Message;
@@ -166,10 +168,12 @@ procedure TFakeJsonServer.StartRequest(Sender: TObject; ARequest: TRequest; ARes
 var
   Timer: TTimerObject;
 begin
-  TLogLog.GetLogger('server').info(Format('%s:[%10s]%s', [ARequest.RemoteAddress, ARequest.Method, ARequest.URL]));
+  TLogLog.GetLogger('server').info(Format('%s:[%10s]%s',
+    [ARequest.RemoteAddress, ARequest.Method, ARequest.URL]));
   Timer := TTimerObject.Create;
   Timer.Request := ARequest;
-  TLogLog.GetLogger('server').info(Format('%s:[%10s]%s', [ARequest.RemoteAddress, ARequest.Method, ARequest.URL]));
+  TLogLog.GetLogger('server').info(Format('%s:[%10s]%s',
+    [ARequest.RemoteAddress, ARequest.Method, ARequest.URL]));
   FTimers.Add(Timer);
 end;
 
@@ -181,7 +185,8 @@ begin
   timer := FTimers.findByRequest(ARequest);
   if timer <> nil then
   begin
-    message := Format('%s serverd in : %s ', [Timer.requestor, FormatDateTime('hh:nn:ss:zzzz', Now - Timer.start)]);
+    message := Format('%s serverd in : %s ', [Timer.requestor,
+      FormatDateTime('hh:nn:ss:zzzz', Now - Timer.start)]);
     TLogLog.GetLogger('server').info(message);
   end;
   FTimers.stopTimer(timer);
@@ -242,7 +247,6 @@ begin
   Application.BeforeServe := @StartRequest;
   Application.AfterServe := @EndRequest;
   OnException := @ExceptionHandle;
-  //OnShowRequestException := @ShowRequestException;
   RedirectOnError := True;
   configFileName := IncludeTrailingPathDelimiter(GetCurrentDir) + 'config.json';
   if not FileExists(configFileName) then
@@ -261,7 +265,7 @@ begin
       r := TRouterObject(c);
       if (r.Method <> '') and (r.Route <> '') then
       begin
-        TLogLog.getLogger('server').info(Format('%s %s', [r.Method, r.Route]));
+        //TLogLog.getLogger('server').info(Format('%s %s', [r.Method, r.Route]));
         if r.payload <> '' then
         begin
           handle := TPayloadRouter.Create(Application);
@@ -277,6 +281,22 @@ begin
         end;
         handle.DataSetName := r.dataset;
         handle.Payload := r.payload;
+        handle.url := r.route;
+        //TLogLog.getLogger('server').info(Format('Dataset:%s Payload:%s',          [handle.dataSetName, r.payload]));
+        if (handle.dataSetName <> '') then
+        begin
+          if FileExists(handle.dataSetName) then
+            TLogLog.getLogger('server').info(Format('Dataset %s OK',              [handle.dataSetName]))
+          else
+            TLogLog.getLogger('server').Error(Format('Dataset %s ERROR',
+              [handle.dataSetName]));
+        end
+        else
+        begin
+          TLogLog.getLogger('server').info('Dataset not provided');
+        end;
+
+
         AddRoute(r.method, r.route, handle);
       end;
     end;
@@ -285,6 +305,7 @@ begin
     FreeAndNil(FileStream);
   end;
   AddRoute('GET', '/stop', @handleStopRequest);
+  TLogLog.GetLogger('server').Debug('Routers count %d', [FRoutes.Count]);
 end;
 
 
