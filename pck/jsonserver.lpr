@@ -10,10 +10,9 @@ uses {$IFDEF UseCThreads}
   Classes,
   SysUtils,
   app,
-  om,
   paxhttp.server,
-  paxlog,
-  routers { you can add units after this };
+  paxlog
+  { you can add units after this };
 
 {$R *.res}
 
