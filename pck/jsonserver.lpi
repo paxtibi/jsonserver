@@ -61,7 +61,7 @@
     </Target>
     <SearchPaths>
       <IncludeFiles Value="$(ProjOutDir)"/>
-      <OtherUnitFiles Value="..\src;..\src\os\$(TargetOS);..\..\paxhttp\src;..\..\paxjson\src"/>
+      <OtherUnitFiles Value="..\src;..\..\paxhttp\src;packages\paxhttp\src;..\..\paxjson\src;packages\paxjson\src;packages\paxlogging\src"/>
       <UnitOutputDirectory Value="..\lib\$(TargetCPU)-$(TargetOS)"/>
     </SearchPaths>
   </CompilerOptions>
