@@ -12,6 +12,7 @@ uses {$IFDEF UseCThreads}
   app,
   om,
   paxhttp.server,
+  paxlog,
   routers { you can add units after this };
 
 {$R *.res}
@@ -80,7 +81,8 @@ begin
   Application.AddRoute('GET', '/server/reload', @handleReloadRequest);
   Application.AddRoute('GET', '/server/config', @handleEmitConfigRequest);
   Application.StopOnException := False;
-  Writeln(Format('Accept request on port :%d', [Application.Port]));
+  TFakeJsonServer(Application).InitializeRouters;
+  getLogger('Server').info('Accept request on port :%d', [Application.Port]);
   Application.Run;
   Application.Free;
 end.

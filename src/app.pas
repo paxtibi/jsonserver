@@ -68,21 +68,25 @@ procedure handleEmitConfigRequest(aReq: TRequest; aResp: TResponse; args: TStrin
 implementation
 
 uses
-  dateutils, CustApp, jsonparser, routers;
+  dateutils, CustApp, jsonparser, routers, paxlog;
 
 procedure handleStopRequest(aReq: TRequest; aResp: TResponse; args: TStrings);
 begin
+  getLogger('StopRequest').info('Enter');
   aResp.ContentType := 'text/html';
   aResp.Content := '<body><p>Bye!</p></body>';
   Application.Terminate;
+  getLogger('StopRequest').info('Leave');
 end;
 
 procedure handleReloadRequest(aReq: TRequest; aResp: TResponse; args: TStrings);
 begin
+  getLogger('ReloadRequest').info('Enter');
   Application.ClearRouters;
   Application.Initialize;
   aResp.ContentType := 'application/text';
   aResp.Content := 'OK';
+  getLogger('ReloadRequest(').info('Enter');
 end;
 
 procedure handleEmitConfigRequest(aReq: TRequest; aResp: TResponse; args: TStrings);
@@ -97,6 +101,7 @@ var
   stringItem: string;
   rc: TRouteContainer;
 begin
+  getLogger('EmitConfigRequest').info('Enter');
   aResp.ContentType := 'text/html';
   aResp.Content := '<html>' + LineEnding;
   aResp.Content := aResp.Content + '  <head>' + LineEnding;
@@ -116,10 +121,10 @@ begin
   aResp.Content := aResp.Content + '        <ul class="list-group list-group-flush">' + LineEnding;
   for rc in Application.getRoutersList do
   begin
-  aResp.Content := aResp.Content + Format('    <li class="list-group-item">%s', [LineEnding]);
-  aResp.Content := aResp.Content + Format('    <div class="swagger-ui opblock opblock-options">', [LineEnding]);
-  aResp.Content := aResp.Content + Format('    <div class="opblock-summary opblock-summary-options"><span class="opblock-summary-method">%s</span><span class="opblock-summary-path"><a class="nostyle"><span>%s</span></a></span><div class="opblock-summary-description">%s</div></div>', [rc.requestMethod, rc.urlPattern, '', LineEnding]);
-  aResp.Content := aResp.Content + Format('    </li>%s', [LineEnding]);
+    aResp.Content := aResp.Content + Format('    <li class="list-group-item">%s', [LineEnding]);
+    aResp.Content := aResp.Content + Format('    <div class="swagger-ui opblock opblock-options">', [LineEnding]);
+    aResp.Content := aResp.Content + Format('    <div class="opblock-summary opblock-summary-options"><span class="opblock-summary-method">%s</span><span class="opblock-summary-path"><a class="nostyle"><span>%s</span></a></span><div class="opblock-summary-description">%s</div></div>', [rc.requestMethod, rc.urlPattern, '', LineEnding]);
+    aResp.Content := aResp.Content + Format('    </li>%s', [LineEnding]);
   end;
   aResp.Content := aResp.Content + '  </ul>' + LineEnding;
   aResp.Content := aResp.Content + '</div>' + LineEnding;
@@ -127,6 +132,7 @@ begin
   aResp.Content := aResp.Content + '    <div>' + LineEnding;
   aResp.Content := aResp.Content + '  </body>' + LineEnding;
   aResp.Content := aResp.Content + '</html>' + LineEnding;
+  getLogger('EmitConfigRequest').info('Leave');
 end;
 
 { TTimersHolderHelper }
@@ -239,23 +245,20 @@ procedure TFakeJsonServer.StartRequest(Sender: TObject; ARequest: TRequest; ARes
 var
   Timer: TTimerObject;
 begin
-  Writeln(Format('%s:[%10s]%s', [ARequest.RemoteAddress, ARequest.Method, ARequest.URL]));
+  GetLogger('Server').info('%s:[%10s]%s', [ARequest.RemoteAddress, ARequest.Method, ARequest.URL]);
   Timer := TTimerObject.Create;
   Timer.Request := ARequest;
-  Writeln(Format('%s:[%10s]%s', [ARequest.RemoteAddress, ARequest.Method, ARequest.URL]));
   FTimers.Add(Timer);
 end;
 
 procedure TFakeJsonServer.EndRequest(Sender: TObject; ARequest: TRequest; AResponse: TResponse);
 var
-  timer:   TTimerObject;
-  message: string;
+  timer: TTimerObject;
 begin
   timer := FTimers.findByRequest(ARequest);
   if timer <> nil then
   begin
-    message := Format('%s serverd in : %s ', [Timer.requestor, FormatDateTime('hh:nn:ss:zzzz', Now - Timer.start)]);
-    Writeln(message);
+    GetLogger('Server').info('%s serverd in : %s ', [Timer.requestor, FormatDateTime('hh:nn:ss:zzzz', Now - Timer.start)]);
   end;
   FTimers.stopTimer(timer);
 end;
@@ -302,6 +305,7 @@ var
   jsonData: TJSONStringType;
   handle: TRouter;
 begin
+  getLogger('Server').info('Initializing');
   configFileName := IncludeTrailingPathDelimiter(GetCurrentDir) + 'config.json';
   if not FileExists(configFileName) then
   begin
@@ -311,7 +315,7 @@ begin
   FileStream := TFileStream.Create(configFileName, fmOpenRead);
   SetLength(jsonData, FileStream.Size);
   FileStream.Read(jsonData[1], FileStream.Size);
-  Writeln(jsonData);
+  getLogger('Server').info('%s', [jsonData]);
   DeStreamer := TJSONDeStreamer.Create(nil);
   try
     DeStreamer.JSONToObject(jsonData, FConfig);
@@ -343,16 +347,16 @@ begin
         begin
           if FileExists(handle.dataSetName) then
           begin
-            Writeln(Format('Dataset %s OK', [handle.dataSetName]));
+            getLogger('Server').info('Dataset %s OK', [handle.dataSetName]);
           end
           else
           begin
-            Writeln(Format('Dataset %s ERROR', [handle.dataSetName]));
+            getLogger('Server').info('Dataset %s ERROR', [handle.dataSetName]);
           end;
         end
         else
         begin
-          Writeln('Dataset not provided');
+          getLogger('Server').info('Dataset not provided');
         end;
         AddRoute(r.method, r.route, handle);
       end;
@@ -361,7 +365,8 @@ begin
     FreeAndNil(DeStreamer);
     FreeAndNil(FileStream);
   end;
-  Writeln(Format('Routers count %d', [FRoutes.Count]));
+  getLogger('Server').info('Routers count %d', [FRoutes.Count]);
+  getLogger('Server').info('Done');
 end;
 
 
@@ -373,7 +378,6 @@ begin
   Application.AfterServe := @EndRequest;
   OnException := @ExceptionHandle;
   RedirectOnError := True;
-  initializeRouters;
 end;
 
 
