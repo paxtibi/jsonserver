@@ -1,0 +1,32 @@
+# Part of `travis-lazarus` (https://github.com/nielsAD/travis-lazarus)
+# License: MIT
+
+language: generic
+sudo: required
+dist: trusty
+
+
+os:
+  - linux
+
+env:
+  global:
+    - DISPLAY=:99.0
+  matrix:
+    - LAZ_VER=1.8.2 LAZ_ENV=linux LAZ_OPT="--os=linux --cpu=x86_64"
+
+before_install:
+  # Start virtual display server
+  - Xvfb $DISPLAY &
+  - chmod +x ./ci/travis.install.py
+
+install:
+  - ./ci/travis.install.py
+
+script:
+  - lazbuild pck/jsonserver.lpi
+  
+notifications:
+  email:
+    on_success: false
+    on_failure: change
