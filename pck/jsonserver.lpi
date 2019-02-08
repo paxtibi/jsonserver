@@ -29,10 +29,16 @@
         <CommandLineParams Value="-wp ../../data"/>
       </local>
     </RunParams>
-    <RequiredPackages Count="1">
+    <RequiredPackages Count="3">
       <Item1>
-        <PackageName Value="paxlogging_package"/>
+        <PackageName Value="paxjson_package"/>
       </Item1>
+      <Item2>
+        <PackageName Value="paxhttp_package"/>
+      </Item2>
+      <Item3>
+        <PackageName Value="paxlogging_package"/>
+      </Item3>
     </RequiredPackages>
     <Units Count="4">
       <Unit0>
@@ -61,7 +67,7 @@
     </Target>
     <SearchPaths>
       <IncludeFiles Value="$(ProjOutDir)"/>
-      <OtherUnitFiles Value="..\src;..\..\paxhttp\src;packages\paxhttp\src;..\..\paxjson\src;packages\paxjson\src;packages\paxlogging\src"/>
+      <OtherUnitFiles Value="..\src"/>
       <UnitOutputDirectory Value="..\lib\$(TargetCPU)-$(TargetOS)"/>
     </SearchPaths>
   </CompilerOptions>

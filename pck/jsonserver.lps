@@ -8,6 +8,7 @@
       <Unit0>
         <Filename Value="jsonserver.lpr"/>
         <IsPartOfProject Value="True"/>
+        <IsVisibleTab Value="True"/>
         <CursorPos X="13" Y="15"/>
         <UsageCount Value="212"/>
         <Loaded Value="True"/>
@@ -93,7 +94,7 @@
       </Unit11>
       <Unit12>
         <Filename Value="C:\programmi\lazarus-1.8-32\fpc\3.0.4\source\rtl\inc\objpash.inc"/>
-        <EditorIndex Value="11"/>
+        <EditorIndex Value="10"/>
         <TopLine Value="376"/>
         <CursorPos X="69" Y="293"/>
         <UsageCount Value="56"/>
@@ -122,7 +123,7 @@
       </Unit15>
       <Unit16>
         <Filename Value="C:\programmi\lazarus-1.8-32\fpc\3.0.4\source\rtl\objpas\classes\classesh.inc"/>
-        <EditorIndex Value="10"/>
+        <EditorIndex Value="9"/>
         <TopLine Value="158"/>
         <CursorPos Y="180"/>
         <UsageCount Value="12"/>
@@ -193,7 +194,7 @@
       </Unit25>
       <Unit26>
         <Filename Value="..\..\paxhttp\src\paxhttp.server.pas"/>
-        <EditorIndex Value="12"/>
+        <EditorIndex Value="11"/>
         <UsageCount Value="18"/>
         <Loaded Value="True"/>
       </Unit26>
@@ -479,31 +480,31 @@
       </Unit66>
       <Unit67>
         <Filename Value="C:\programmi\lazarus-1.8-32\fpc\3.0.4\source\rtl\inc\threadh.inc"/>
-        <EditorIndex Value="9"/>
+        <EditorIndex Value="8"/>
         <TopLine Value="135"/>
         <CursorPos X="41" Y="154"/>
-        <UsageCount Value="11"/>
+        <UsageCount Value="12"/>
         <Loaded Value="True"/>
       </Unit67>
       <Unit68>
         <Filename Value="C:\programmi\lazarus-1.8-32\fpc\3.0.4\source\rtl\objpas\typinfo.pp"/>
-        <EditorIndex Value="8"/>
+        <EditorIndex Value="7"/>
         <TopLine Value="394"/>
         <CursorPos X="21" Y="424"/>
-        <UsageCount Value="11"/>
+        <UsageCount Value="12"/>
         <Loaded Value="True"/>
       </Unit68>
       <Unit69>
         <Filename Value="C:\programmi\lazarus-1.8-32\fpc\3.0.4\source\rtl\win\sysosh.inc"/>
-        <EditorIndex Value="7"/>
+        <EditorIndex Value="6"/>
         <TopLine Value="6"/>
         <CursorPos X="19" Y="33"/>
-        <UsageCount Value="11"/>
+        <UsageCount Value="12"/>
         <Loaded Value="True"/>
       </Unit69>
       <Unit70>
         <Filename Value="C:\programmi\lazarus-1.8-32\fpc\3.0.4\source\rtl\objpas\sysutils\datih.inc"/>
-        <EditorIndex Value="4"/>
+        <EditorIndex Value="3"/>
         <TopLine Value="139"/>
         <CursorPos X="27" Y="158"/>
         <UsageCount Value="11"/>
@@ -511,7 +512,7 @@
       </Unit70>
       <Unit71>
         <Filename Value="C:\programmi\lazarus-1.8-32\fpc\3.0.4\source\rtl\objpas\sysutils\sysinth.inc"/>
-        <EditorIndex Value="6"/>
+        <EditorIndex Value="5"/>
         <TopLine Value="20"/>
         <CursorPos X="48" Y="37"/>
         <UsageCount Value="11"/>
@@ -519,7 +520,7 @@
       </Unit71>
       <Unit72>
         <Filename Value="C:\programmi\lazarus-1.8-32\fpc\3.0.4\source\rtl\objpas\sysutils\dati.inc"/>
-        <EditorIndex Value="5"/>
+        <EditorIndex Value="4"/>
         <TopLine Value="882"/>
         <CursorPos X="3" Y="884"/>
         <UsageCount Value="11"/>
@@ -527,11 +528,9 @@
       </Unit72>
       <Unit73>
         <Filename Value="..\.travis.yml"/>
-        <IsVisibleTab Value="True"/>
-        <EditorIndex Value="3"/>
-        <CursorPos X="41" Y="23"/>
+        <EditorIndex Value="-1"/>
+        <CursorPos X="55" Y="25"/>
         <UsageCount Value="11"/>
-        <Loaded Value="True"/>
         <DefaultSyntaxHighlighter Value="None"/>
       </Unit73>
     </Units>
