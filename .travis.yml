@@ -24,6 +24,12 @@ install:
   - ./ci/travis.install.py
 
 script:
+  - git clone https://github.com/paxtibi/paxjson.git     packages/paxjson
+  - git clone https://github.com/paxtibi/paxlogging.git  packages/paxlogging
+  - git clone https://github.com/paxtibi/paxhttp.git     packages/paxhttp
+  - lazbuild packages/paxlogging/pck/paxlogging_package.lpk
+  - lazbuild packages/paxjson/pck/paxjson_package.lpk
+  - lazbuild packages/paxhttp/pck/paxhttp_package.lpk
   - lazbuild pck/jsonserver.lpi
   
 notifications:
