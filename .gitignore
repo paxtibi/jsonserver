@@ -1,4 +1,5 @@
-/bin/i386-win32/data.json
+backup
+/bin
 /lib
 /.project
-backup
+bin

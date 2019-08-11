@@ -1,6 +1,7 @@
 unit routers;
 
 {$mode objfpc}{$H+}
+{$Warn 5024 off}
 
 interface
 
@@ -51,7 +52,8 @@ type
   TPayloadRouter = class(TRouter)
   private
     function matchInto(aData: TJSONData; anArray: TJSONArray): boolean;
-    function match(aData: TJSONObject; filter: TJSONData): boolean;
+  protected
+    function match(aData: TJSONObject; filter: TJSONData): boolean; override;
   public
     procedure handleRequest(aReq: TRequest; aResp: TResponse; args: TStrings); override;
   end;
@@ -141,20 +143,17 @@ begin
       jsonResponse := TJSONArray.Create();
       try
         dataSetFile := TFileStream.Create(self.FDataSetName, fmOpenRead);
-        parser := TJSONParser.Create(dataSetFile, [joUTF8, joStrict,
-          joComments, joIgnoreTrailingComma]);
+        parser := TJSONParser.Create(dataSetFile, [joUTF8, joStrict, joComments, joIgnoreTrailingComma]);
         jsonParsed := parser.Parse;
         FreeAndNil(parser);
         payloadString := aReq.Content;
-        parser := TJSONParser.Create(payloadString,
-          [joUTF8, joStrict, joComments, joIgnoreTrailingComma]);
+        parser := TJSONParser.Create(payloadString, [joUTF8, joStrict, joComments, joIgnoreTrailingComma]);
         payloadInput := TJSONObject(parser.Parse);
         FreeAndNil(parser);
         if (Output <> nil) then
         begin
           Writeln(Format('Using : ', [output.Template]));
-          remapParser := TJSONParser.Create(output.Template,
-            [joUTF8, joStrict, joComments, joIgnoreTrailingComma]);
+          remapParser := TJSONParser.Create(output.Template, [joUTF8, joStrict, joComments, joIgnoreTrailingComma]);
           remapObject := remapParser.Parse;
           if (remapObject is TJSONObject) then
           begin
@@ -297,17 +296,14 @@ begin
         if (self.FDataSetName <> '') then
         begin
           dataSetFile := TFileStream.Create(self.FDataSetName, fmOpenRead);
-          parser := TJSONParser.Create(dataSetFile,
-            [joUTF8, joStrict, joComments, joIgnoreTrailingComma]);
+          parser := TJSONParser.Create(dataSetFile, [joUTF8, joStrict, joComments, joIgnoreTrailingComma]);
           if (output <> nil) and (output.Template <> '') and (output.Key <> '') then
           begin
-            remapParser := TJSONParser.Create(output.template,
-              [joUTF8, joStrict, joComments, joIgnoreTrailingComma]);
+            remapParser := TJSONParser.Create(output.template, [joUTF8, joStrict, joComments, joIgnoreTrailingComma]);
             remapObject := remapParser.Parse;
             if (remapObject is TJSONObject) then
             begin
-              jsonResponse := (remapObject as TJSONObject).Find(output.key) as
-                TJSONArray;
+              jsonResponse := (remapObject as TJSONObject).Find(output.key) as TJSONArray;
             end;
             FreeAndNil(remapParser);
           end
