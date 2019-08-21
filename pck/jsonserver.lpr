@@ -11,8 +11,8 @@ uses {$IFDEF UseCThreads}
   SysUtils,
   app,
   paxhttp.server,
-  paxlog
-  { you can add units after this };
+  paxlog { you can add units after this };
+
 
 {$R *.res}
 
