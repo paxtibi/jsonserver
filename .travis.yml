@@ -24,7 +24,7 @@ script:
   - git clone https://github.com/paxtibi/paxjson.git     packages/paxjson
   - git clone https://github.com/paxtibi/paxlogging.git  packages/paxlogging
   - git clone https://github.com/paxtibi/paxhttp.git     packages/paxhttp
-  - lazbuild --add-package packages/paxhttp/pck/paxhttp_package.lpk packages/paxjson/pck/paxjson_package.lpk packages/paxlogging/pck/paxlogging_package.lpk
+  - lazbuild --add-package /home/travis/build/paxtibi/jsonserver/packages/paxhttp/pck/paxhttp_package.lpk /home/travis/build/paxtibi/jsonserver/packages/paxjson/pck/paxjson_package.lpk /home/travis/build/paxtibi/jsonserver/packages/paxlogging/pck/paxlogging_package.lpk
   - lazbuild pck/jsonserver.lpi
   
 notifications:
