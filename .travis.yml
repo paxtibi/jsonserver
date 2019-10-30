@@ -1,3 +1,4 @@
+# Freepascal 3.0.4 - Lazarus - 2.0.4
 language: generic
 sudo: required
 dist: trusty
@@ -13,9 +14,9 @@ env:
 before_install:
   - sudo apt-get update
   - Xvfb $DISPLAY &
-  - wget "https://sourceforge.net/projects/lazarus/files/Lazarus Linux amd64 DEB/Lazarus 2.0.6/fpc_3.0.4-3_amd64.deb/download" -O fpc_3.0.4-3_amd64.deb
-  - wget "https://sourceforge.net/projects/lazarus/files/Lazarus Linux amd64 DEB/Lazarus 2.0.6/fpc-src_3.0.4-2_amd64.deb/download" -O fpc-src_3.0.4-2_amd64.deb
-  - wget "https://sourceforge.net/projects/lazarus/files/Lazarus Linux amd64 DEB/Lazarus 2.0.6/lazarus-project_2.0.6-0_amd64.deb/download" -O lazarus-project_1.8.4-0_amd64.deb
+  - wget "https://sourceforge.net/projects/lazarus/files/Lazarus%20Linux%20amd64%20DEB/Lazarus%202.0.4/fpc_3.0.4-3_amd64.deb/download" -O fpc_3.0.4-3_amd64.deb
+  - wget "https://sourceforge.net/projects/lazarus/files/Lazarus%20Linux%20amd64%20DEB/Lazarus%202.0.4/fpc-src_3.0.4-2_amd64.deb/download" -O fpc-src_3.0.4-2_amd64.deb
+  - wget "https://sourceforge.net/projects/lazarus/files/Lazarus%20Linux%20amd64%20DEB/Lazarus%202.0.4/lazarus-project_2.0.6-0_amd64.deb/download" -O lazarus-project_1.8.4-0_amd64.deb
   - ls -lap
 install:
   - sudo apt-get install libgtk2.0-dev
