@@ -11,7 +11,7 @@ env:
     - DISPLAY=:99.0
 
 before_install:
-  - sudo apt update
+  - sudo apt-get update
   - Xvfb $DISPLAY &
   - wget "https://sourceforge.net/projects/lazarus/files/Lazarus%20Linux%20amd64%20DEB/Lazarus%201.8.4/fpc_3.0.4-3_amd64.deb/download" -O fpc_3.0.4-3_amd64.deb
   - wget "https://sourceforge.net/projects/lazarus/files/Lazarus%20Linux%20amd64%20DEB/Lazarus%201.8.4/fpc-src_3.0.4-2_amd64.deb/download" -O fpc-src_3.0.4-2_amd64.deb
