@@ -77,6 +77,17 @@
       <OtherUnitFiles Value="..\src"/>
       <UnitOutputDirectory Value="..\lib\$(TargetCPU)-$(TargetOS)"/>
     </SearchPaths>
+    <Linking>
+      <Debugging>
+        <GenerateDebugInfo Value="False"/>
+      </Debugging>
+    </Linking>
+    <Other>
+      <Verbosity>
+        <ShoLineNum Value="True"/>
+        <ShowCond Value="True"/>
+      </Verbosity>
+    </Other>
   </CompilerOptions>
   <Debugging>
     <Exceptions Count="8">

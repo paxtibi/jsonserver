@@ -15,9 +15,9 @@ type
 
   TTimerObject = class
   private
-    FRequest: TRequest;
-    Frequestor: string;
-    FStart: TDateTime;
+    FRequest:      TRequest;
+    Frequestor:    string;
+    FStart:        TDateTime;
     procedure SetRequest(AValue: TRequest);
     procedure SetRequestor(AValue: string);
   public
@@ -27,7 +27,7 @@ type
     property Requestor: string read Frequestor write Setrequestor;
   end;
 
-  TTimersHolder = specialize fgl.TFPGObjectList<TTimerObject>;
+  TTimersHolder = specialize TFPGObjectList<TTimerObject>;
 
   { TTimersHolderHelper }
 
@@ -40,8 +40,8 @@ type
 
   TFakeJsonServer = class(TCustomSlimHttpApplication)
   private
-    FConfig: TConfigObject;
-    FTimers: TTimersHolder;
+    FConfig:       TConfigObject;
+    FTimers:       TTimersHolder;
     procedure ExceptionHandle(Sender: TObject; E: Exception);
     procedure SetConfig(AValue: TConfigObject);
   public
@@ -58,7 +58,7 @@ type
   end;
 
 var
-  Application: TFakeJsonServer;
+  Application:       TFakeJsonServer;
   ShowCleanUpErrors: boolean = False;
 
 procedure handleStopRequest(aReq: TRequest; aResp: TResponse; args: TStrings);
@@ -74,7 +74,7 @@ procedure handleStopRequest(aReq: TRequest; aResp: TResponse; args: TStrings);
 begin
   getLogger('StopRequest').info('Enter');
   aResp.ContentType := 'text/html';
-  aResp.Content := '<body><p>Bye!</p></body>';
+  aResp.Content     := '<body><p>Bye!</p></body>';
   Application.Terminate;
   getLogger('StopRequest').info('Leave');
 end;
@@ -85,13 +85,13 @@ begin
   Application.ClearRouters;
   Application.Initialize;
   aResp.ContentType := 'application/text';
-  aResp.Content := 'OK';
+  aResp.Content     := 'OK';
   getLogger('ReloadRequest(').info('Enter');
 end;
 
 procedure handleEmitConfigRequest(aReq: TRequest; aResp: TResponse; args: TStrings);
 const
-  scripts: array [0..4] of string = (
+  scripts          : array [0..4] of string = (
     '<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">',
     '<link rel="stylesheet" href="https://editor.swagger.io/dist/swagger-editor.css">',
     '<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>',
@@ -103,35 +103,35 @@ var
 begin
   getLogger('EmitConfigRequest').info('Enter');
   aResp.ContentType := 'text/html';
-  aResp.Content := '<html>' + LineEnding;
-  aResp.Content := aResp.Content + '  <head>' + LineEnding;
-  aResp.Content := aResp.Content + '  <!-- Latest compiled and minified CSS -->' + LineEnding;
+  aResp.Content     := '<html>' + LineEnding;
+  aResp.Content     := aResp.Content + '  <head>' + LineEnding;
+  aResp.Content     := aResp.Content + '  <!-- Latest compiled and minified CSS -->' + LineEnding;
   for stringItem in scripts do
   begin
     aResp.Content := aResp.Content + stringItem + LineEnding;
   end;
-  aResp.Content := aResp.Content + '  </head>' + LineEnding;
-  aResp.Content := aResp.Content + '  <body>' + LineEnding;
-  aResp.Content := aResp.Content + '    <div class="panel panel-primary">' + LineEnding;
-  aResp.Content := aResp.Content + '      <div class="panel-heading">' + LineEnding;
-  aResp.Content := aResp.Content + '        <h3 class="panel-title">Current Routers</h3>' + LineEnding;
-  aResp.Content := aResp.Content + '      </div>' + LineEnding;
-  aResp.Content := aResp.Content + '      <div class="card" style="width: 18rem;">' + LineEnding;
-  aResp.Content := aResp.Content + '        <div class="card-body">' + LineEnding;
-  aResp.Content := aResp.Content + '        <ul class="list-group list-group-flush">' + LineEnding;
+  aResp.Content    := aResp.Content + '  </head>' + LineEnding;
+  aResp.Content    := aResp.Content + '  <body>' + LineEnding;
+  aResp.Content    := aResp.Content + '    <div class="panel panel-primary">' + LineEnding;
+  aResp.Content    := aResp.Content + '      <div class="panel-heading">' + LineEnding;
+  aResp.Content    := aResp.Content + '        <h3 class="panel-title">Current Routers</h3>' + LineEnding;
+  aResp.Content    := aResp.Content + '      </div>' + LineEnding;
+  aResp.Content    := aResp.Content + '      <div class="card" style="width: 18rem;">' + LineEnding;
+  aResp.Content    := aResp.Content + '        <div class="card-body">' + LineEnding;
+  aResp.Content    := aResp.Content + '        <ul class="list-group list-group-flush">' + LineEnding;
   for rc in Application.getRoutersList do
   begin
-    aResp.Content := aResp.Content + Format('    <li class="list-group-item">%s', [LineEnding]);
-    aResp.Content := aResp.Content + Format('    <div class="swagger-ui opblock opblock-options">', [LineEnding]);
-    aResp.Content := aResp.Content + Format('    <div class="opblock-summary opblock-summary-options"><span class="opblock-summary-method">%s</span><span class="opblock-summary-path"><a class="nostyle"><span>%s</span></a></span><div class="opblock-summary-description">%s</div></div>', [rc.requestMethod, rc.urlPattern, '', LineEnding]);
-    aResp.Content := aResp.Content + Format('    </li>%s', [LineEnding]);
+    aResp.Content  := aResp.Content + Format('    <li class="list-group-item">%s', [LineEnding]);
+    aResp.Content  := aResp.Content + Format('    <div class="swagger-ui opblock opblock-options">', [LineEnding]);
+    aResp.Content  := aResp.Content + Format('    <div class="opblock-summary opblock-summary-options"><span class="opblock-summary-method">%s</span><span class="opblock-summary-path"><a class="nostyle"><span>%s</span></a></span><div class="opblock-summary-description">%s</div></div>', [rc.requestMethod, rc.urlPattern, '', LineEnding]);
+    aResp.Content  := aResp.Content + Format('    </li>%s', [LineEnding]);
   end;
-  aResp.Content := aResp.Content + '  </ul>' + LineEnding;
-  aResp.Content := aResp.Content + '</div>' + LineEnding;
-  aResp.Content := aResp.Content + '</div>' + LineEnding;
-  aResp.Content := aResp.Content + '    <div>' + LineEnding;
-  aResp.Content := aResp.Content + '  </body>' + LineEnding;
-  aResp.Content := aResp.Content + '</html>' + LineEnding;
+  aResp.Content    := aResp.Content + '  </ul>' + LineEnding;
+  aResp.Content    := aResp.Content + '</div>' + LineEnding;
+  aResp.Content    := aResp.Content + '</div>' + LineEnding;
+  aResp.Content    := aResp.Content + '    <div>' + LineEnding;
+  aResp.Content    := aResp.Content + '  </body>' + LineEnding;
+  aResp.Content    := aResp.Content + '</html>' + LineEnding;
   getLogger('EmitConfigRequest').info('Leave');
 end;
 
@@ -203,16 +203,16 @@ end;
 procedure ShowRequestException(AResponse: TResponse; AnException: Exception; var handled: boolean);
 begin
   Writeln(Format('serving : %s, exception: %s, message: %s', [AResponse.Referer, AnException.ClassName, AnException.Message]));
-  AResponse.Code := 500;
+  AResponse.Code    := 500;
   AResponse.Content := AnException.Message;
-  handled := True;
+  handled           := True;
 end;
 
 constructor TFakeJsonServer.Create(TheOwner: TComponent);
 begin
   inherited Create(TheOwner);
-  FConfig := TConfigObject.Create;
-  FTimers := TTimersHolder.Create(True);
+  FConfig          := TConfigObject.Create;
+  FTimers          := TTimersHolder.Create(True);
 end;
 
 destructor TFakeJsonServer.Destroy;
@@ -258,7 +258,7 @@ begin
   timer := FTimers.findByRequest(ARequest);
   if timer <> nil then
   begin
-    GetLogger('Server').info('%s serverd in : %s ', [Timer.requestor, FormatDateTime('hh:nn:ss:zzzz', Now - Timer.start)]);
+    GetLogger('Server').info('%s served in : %s ', [Timer.requestor, FormatDateTime('hh:nn:ss:zzzz', Now - Timer.start)]);
   end;
   FTimers.stopTimer(timer);
 end;
@@ -266,14 +266,14 @@ end;
 
 class function TFakeJsonServer.normalizePath(Path: string): string;
 var
-  idx:    integer;
+  idx: integer;
   buffer: TStringList;
 begin
-  buffer := TStringList.Create;
-  Result := ExcludeTrailingPathDelimiter(Path);
+  buffer           := TStringList.Create;
+  Result           := ExcludeTrailingPathDelimiter(Path);
   buffer.LineBreak := DirectorySeparator;
-  buffer.Text := Result;
-  idx := 0;
+  buffer.Text      := Result;
+  idx              := 0;
   while idx < buffer.Count - 1 do
   begin
     if buffer[idx] = '.' then
@@ -290,8 +290,8 @@ begin
       end;
     Inc(idx);
   end;
-  Result := ExcludeTrailingPathDelimiter(buffer.Text);
-  idx := 0;
+  Result           := ExcludeTrailingPathDelimiter(buffer.Text);
+  idx              := 0;
   FreeAndNil(buffer);
 end;
 
@@ -300,8 +300,8 @@ var
   configFileName: string;
   FileStream: TFileStream;
   DeStreamer: TJSONDeStreamer;
-  c:      TCollectionItem;
-  r:      TRouterObject;
+  c: TCollectionItem;
+  r: TRouterObject;
   jsonData: TJSONStringType;
   handle: TRouter;
 begin
@@ -336,13 +336,13 @@ begin
         end;
         if (r.outputTemplate <> '') and (r.outputKey <> '') then
         begin
-          handle.output := TOutput.Create;
+          handle.output          := TOutput.Create;
           handle.output.Template := r.outputTemplate;
-          handle.output.Key := r.outputKey;
+          handle.output.Key      := r.outputKey;
         end;
         handle.DataSetName := r.dataset;
-        handle.Payload := r.payload;
-        handle.url := r.route;
+        handle.Payload     := r.payload;
+        handle.url         := r.route;
         if (handle.dataSetName <> '') then
         begin
           if FileExists(handle.dataSetName) then
@@ -373,11 +373,11 @@ end;
 procedure TFakeJsonServer.Initialize;
 begin
   inherited Initialize;
-  Application.Threaded := True;
+  Application.Threaded    := True;
   Application.BeforeServe := @StartRequest;
-  Application.AfterServe := @EndRequest;
-  OnException := @ExceptionHandle;
-  RedirectOnError := True;
+  Application.AfterServe  := @EndRequest;
+  OnException             := @ExceptionHandle;
+  RedirectOnError         := True;
 end;
 
 

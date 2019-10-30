@@ -21,11 +21,11 @@ uses {$IFDEF UseCThreads}
     idx: integer;
     parameter: string;
   begin
-    parameter := ExtractFileDir(ParamStr(0));
-    parameter += DirectorySeparator + '..';
-    parameter += DirectorySeparator + '..';
-    parameter += DirectorySeparator + 'data';
-    parameter := TFakeJsonServer.normalizePath(parameter);
+    parameter      := ExtractFileDir(ParamStr(0));
+    parameter      += DirectorySeparator + '..';
+    parameter      += DirectorySeparator + '..';
+    parameter      += DirectorySeparator + 'data';
+    parameter      := TFakeJsonServer.normalizePath(parameter);
     if DirectoryExists(parameter) then
     begin
       chdir(parameter);
