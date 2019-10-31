@@ -12,7 +12,7 @@ type
   { TOutput }
   TOutput = class
   private
-    FKey: string;
+    FKey:      string;
     FTemplate: string;
     procedure SetKey(AValue: string);
     procedure SetTemplate(AValue: string);
@@ -104,7 +104,7 @@ begin
     exit;
   try
     jsonFilter := filter.FindPath(FPayload);
-    jsonData := aData.Find(FCompare);
+    jsonData   := aData.Find(FCompare);
     if jsonFilter is TJSONArray then
     begin
       Result := matchInto(jsonData, jsonFilter as TJSONArray);
@@ -140,11 +140,11 @@ begin
   try
     try
       aResp.ContentType := 'application/json';
-      jsonResponse := TJSONArray.Create();
+      jsonResponse      := TJSONArray.Create();
       try
         dataSetFile := TFileStream.Create(self.FDataSetName, fmOpenRead);
-        parser := TJSONParser.Create(dataSetFile, [joUTF8, joStrict, joComments, joIgnoreTrailingComma]);
-        jsonParsed := parser.Parse;
+        parser      := TJSONParser.Create(dataSetFile, [joUTF8, joStrict, joComments, joIgnoreTrailingComma]);
+        jsonParsed  := parser.Parse;
         FreeAndNil(parser);
         payloadString := aReq.Content;
         parser := TJSONParser.Create(payloadString, [joUTF8, joStrict, joComments, joIgnoreTrailingComma]);
@@ -167,7 +167,7 @@ begin
           for dataSetIndex := 0 to jsonData.Count - 1 do
           begin
             matchParameters := True;
-            jsonRecord := TJSONObject(jsonData[dataSetIndex]);
+            jsonRecord      := TJSONObject(jsonData[dataSetIndex]);
             matchParameters := match(jsonRecord, payloadInput);
             if matchParameters then
               jsonResponse.Add(jsonRecord.Clone);
@@ -296,7 +296,7 @@ begin
         if (self.FDataSetName <> '') then
         begin
           dataSetFile := TFileStream.Create(self.FDataSetName, fmOpenRead);
-          parser := TJSONParser.Create(dataSetFile, [joUTF8, joStrict, joComments, joIgnoreTrailingComma]);
+          parser      := TJSONParser.Create(dataSetFile, [joUTF8, joStrict, joComments, joIgnoreTrailingComma]);
           if (output <> nil) and (output.Template <> '') and (output.Key <> '') then
           begin
             remapParser := TJSONParser.Create(output.template, [joUTF8, joStrict, joComments, joIgnoreTrailingComma]);
@@ -317,7 +317,7 @@ begin
             jsonData := jsonParsed as TJSONArray;
             for dataSetIndex := 0 to jsonData.Count - 1 do
             begin
-              jsonRecord := jsonData.Objects[dataSetIndex];
+              jsonRecord      := jsonData.Objects[dataSetIndex];
               matchParameters := True;
               for index := 0 to args.Count - 1 do
               begin

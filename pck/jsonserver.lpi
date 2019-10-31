@@ -36,16 +36,13 @@
         </Mode0>
       </Modes>
     </RunParams>
-    <RequiredPackages Count="3">
+    <RequiredPackages Count="2">
       <Item1>
         <PackageName Value="paxjson_package"/>
       </Item1>
       <Item2>
         <PackageName Value="paxhttp_package"/>
       </Item2>
-      <Item3>
-        <PackageName Value="paxlogging_package"/>
-      </Item3>
     </RequiredPackages>
     <Units Count="4">
       <Unit0>

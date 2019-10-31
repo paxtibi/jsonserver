@@ -10,8 +10,7 @@ uses {$IFDEF UseCThreads}
   Classes,
   SysUtils,
   app,
-  paxhttp.server,
-  paxlog { you can add units after this };
+  paxhttp.server;
 
 
 {$R *.res}
@@ -21,11 +20,11 @@ uses {$IFDEF UseCThreads}
     idx: integer;
     parameter: string;
   begin
-    parameter      := ExtractFileDir(ParamStr(0));
-    parameter      += DirectorySeparator + '..';
-    parameter      += DirectorySeparator + '..';
-    parameter      += DirectorySeparator + 'data';
-    parameter      := TFakeJsonServer.normalizePath(parameter);
+    parameter := ExtractFileDir(ParamStr(0));
+    parameter += DirectorySeparator + '..';
+    parameter += DirectorySeparator + '..';
+    parameter += DirectorySeparator + 'data';
+    parameter := TFakeJsonServer.normalizePath(parameter);
     if DirectoryExists(parameter) then
     begin
       chdir(parameter);
@@ -81,7 +80,7 @@ begin
   Application.AddRoute('GET', '/server/config', @handleEmitConfigRequest);
   Application.StopOnException := False;
   TFakeJsonServer(Application).InitializeRouters;
-  getLogger('Server').info('Accept request on port :%d', [Application.Port]);
+  Application.Log(etInfo, 'Accept request on port :%d', [Application.Port]);
   Application.Run;
   Application.Free;
 end.
