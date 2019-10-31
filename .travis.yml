@@ -23,12 +23,12 @@ install:
   - sudo dpkg -i *.deb
 
 script:
-  - git clone https://github.com/paxtibi/paxjson.git     /home/packages/paxjson
-  - git clone https://github.com/paxtibi/paxlogging.git  /home/packages/paxlogging
-  - git clone https://github.com/paxtibi/paxhttp.git     /home/packages/paxhttp
-  - lazbuild --add-package /home/packages/paxhttp/pck/paxhttp_package.lpk /home/packages/paxjson/pck/paxjson_package.lpk /home/packages/paxlogging/pck/paxlogging_package.lpk
-  - git clone --branch=master https://github.com/paxtibi/jsonserver.git /home/paxtibi/jsonserver
-  - lazbuild /home/paxtibi/jsonserver/pck/jsonserver.lpi
+  - git clone https://github.com/paxtibi/paxjson.git     $TRAVIS_BUILD_DIR/packages/paxjson
+  - git clone https://github.com/paxtibi/paxlogging.git  $TRAVIS_BUILD_DIR/packages/paxlogging
+  - git clone https://github.com/paxtibi/paxhttp.git     $TRAVIS_BUILD_DIR/packages/paxhttp
+  - lazbuild --add-package $TRAVIS_BUILD_DIR/packages/paxhttp/pck/paxhttp_package.lpk $TRAVIS_BUILD_DIR/packages/paxjson/pck/paxjson_package.lpk $TRAVIS_BUILD_DIR/packages/paxlogging/pck/paxlogging_package.lpk
+  - git clone --branch=master https://github.com/paxtibi/jsonserver.git $TRAVIS_BUILD_DIR/paxtibi/jsonserver
+  - lazbuild $TRAVIS_BUILD_DIR/paxtibi/jsonserver/pck/jsonserver.lpi
   
 notifications:
   email:
