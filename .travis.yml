@@ -23,11 +23,12 @@ install:
   - sudo dpkg -i *.deb
 
 script:
-  - git clone https://github.com/paxtibi/paxjson.git     packages/paxjson
-  - git clone https://github.com/paxtibi/paxlogging.git  packages/paxlogging
-  - git clone https://github.com/paxtibi/paxhttp.git     packages/paxhttp
-  - lazbuild --add-package packages/paxhttp/pck/paxhttp_package.lpk packages/paxjson/pck/paxjson_package.lpk packages/paxlogging/pck/paxlogging_package.lpk
-  - lazbuild pck/jsonserver.lpi
+  - git clone https://github.com/paxtibi/paxjson.git     /home/packages/paxjson
+  - git clone https://github.com/paxtibi/paxlogging.git  /home/packages/paxlogging
+  - git clone https://github.com/paxtibi/paxhttp.git     /home/packages/paxhttp
+  - lazbuild --add-package /home/packages/paxhttp/pck/paxhttp_package.lpk /home/packages/paxjson/pck/paxjson_package.lpk /home/packages/paxlogging/pck/paxlogging_package.lpk
+  - git clone --branch=master https://github.com/paxtibi/jsonserver.git /home/paxtibi/jsonserver
+  - lazbuild /home/paxtibi/jsonserver/pck/jsonserver.lpi
   
 notifications:
   email:
