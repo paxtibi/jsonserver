@@ -269,7 +269,39 @@ begin
   FTimers.stopTimer(timer);
 end;
 
+{$ifdef Darwin}
+class function TFakeJsonServer.normalizePath(Path: string): string;
+var
+  idx: integer;
+  buffer: TStringList;
+begin
+  buffer := TStringList.Create;
+  Result := ExcludeTrailingPathDelimiter(Path);
+  buffer.LineBreak := DirectorySeparator;
+  buffer.Text := Result;
+  idx := 0;
+  while idx < buffer.Count - 1 do
+  begin
+    if buffer[idx] = '.' then
+    begin
+      buffer.Delete(idx);
+      idx := -1; // restart;
+    end
+    else
+    if buffer[idx] = '..' then
+    begin
+      buffer.Delete(idx);
+      buffer.Delete(idx);
+      idx := -1; // restart;
+    end;
+    Inc(idx);
+  end;
+  Result := ExcludeTrailingPathDelimiter(buffer.Text);
+  idx    := 0;
+  FreeAndNil(buffer);
+end;
 
+{$ELSE}
 class function TFakeJsonServer.normalizePath(Path: string): string;
 var
   idx: integer;
@@ -300,6 +332,8 @@ begin
   idx    := 0;
   FreeAndNil(buffer);
 end;
+
+{$ENDIF}
 
 procedure TFakeJsonServer.InitializeRouters;
 var
