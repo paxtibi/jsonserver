@@ -436,14 +436,6 @@ begin
   begin
     CustomApplication := nil;
   end;
-  try
-    FreeAndNil(Application);
-  except
-    if ShowCleanUpErrors then
-    begin
-      raise;
-    end;
-  end;
 end;
 
 initialization
