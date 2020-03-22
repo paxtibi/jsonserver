@@ -6,6 +6,7 @@ unit app;
 interface
 
 uses
+  eventlog,
   Classes, SysUtils, paxhttp.server, custhttpapp, HTTPDefs,
   fpjson, fpjsonrtti, om, fgl;
 
@@ -22,6 +23,7 @@ type
     procedure SetRequestor(AValue: string);
   public
     constructor Create;
+    destructor Destroy; override;
     property Request: TRequest read FRequest write SetRequest;
     property Start: TDateTime read FStart;
     property Requestor: string read Frequestor write Setrequestor;
@@ -42,19 +44,20 @@ type
   private
     FConfig: TConfigObject;
     FTimers: TTimersHolder;
+    FLog:    TEventLog;
     procedure ExceptionHandle(Sender: TObject; E: Exception);
     procedure SetConfig(AValue: TConfigObject);
   protected
     procedure DoLog(EventType: TEventType; const Msg: string); override;
   public
-    procedure StartRequest(Sender: TObject; ARequest: TRequest; AResponse: TResponse);
-    procedure EndRequest(Sender: TObject; ARequest: TRequest; AResponse: TResponse);
-    procedure Initialize; override;
+    class function normalizePath(Path: string): string;
     constructor Create(TheOwner: TComponent); override;
     destructor Destroy; override;
-    property Config: TConfigObject read FConfig write SetConfig;
-    class function normalizePath(Path: string): string;
+    procedure Initialize; override;
     procedure InitializeRouters;
+    procedure StartRequest(Sender: TObject; ARequest: TRequest; AResponse: TResponse);
+    procedure EndRequest(Sender: TObject; ARequest: TRequest; AResponse: TResponse);
+    property Config: TConfigObject read FConfig write SetConfig;
   protected
     procedure Response404(ARequest: TRequest; AResponse: TResponse);
   end;
@@ -70,7 +73,7 @@ procedure handleEmitConfigRequest(aReq: TRequest; aResp: TResponse; args: TStrin
 implementation
 
 uses
-  dateutils, CustApp, jsonparser, routers, eventlog;
+  dateutils, CustApp, jsonparser, routers;
 
 procedure handleStopRequest(aReq: TRequest; aResp: TResponse; args: TStrings);
 begin
@@ -179,7 +182,7 @@ begin
   FRequest := AValue;
 end;
 
-procedure TTimerObject.Setrequestor(AValue: string);
+procedure TTimerObject.SetRequestor(AValue: string);
 begin
   if Frequestor = AValue then
   begin
@@ -191,6 +194,12 @@ end;
 constructor TTimerObject.Create;
 begin
   FStart := now;
+end;
+
+destructor TTimerObject.Destroy;
+begin
+  FRequest := nil;
+  inherited Destroy;
 end;
 
 { TFakeJsonServer }
@@ -209,17 +218,17 @@ begin
   inherited Create(TheOwner);
   FConfig := TConfigObject.Create;
   FTimers := TTimersHolder.Create(True);
-  EventLog.Active := False;
-  EventLog.LogType := ltFile;
-  EventLog.FileName := ApplicationName + '.log';
-  EventLog.Active := True;
+  FLog    := TEventLog.Create(self);
+  FLog.Active := False;
+  FLog.LogType := ltFile;
+  FLog.FileName := ApplicationName + '.log';
+  FLog.Active := True;
 end;
 
 destructor TFakeJsonServer.Destroy;
 begin
   FreeAndNil(FTimers);
   FreeAndNil(FConfig);
-  EventLog.Active := False;
   inherited Destroy;
 end;
 
@@ -239,7 +248,7 @@ end;
 
 procedure TFakeJsonServer.DoLog(EventType: TEventType; const Msg: string);
 begin
-  EventLog.Log(EventType, Msg);
+  FLog.Log(EventType, Msg);
 end;
 
 procedure TFakeJsonServer.ExceptionHandle(Sender: TObject; E: Exception);
@@ -351,7 +360,6 @@ begin
   begin
     raise Exception.Create(configFileName + ' not found, terminate');
   end;
-
   FileStream := TFileStream.Create(configFileName, fmOpenRead);
   SetLength(jsonData, FileStream.Size);
   FileStream.Read(jsonData[1], FileStream.Size);
@@ -443,4 +451,5 @@ initialization
 
 finalization
   DoneHTTP;
+
 end.
